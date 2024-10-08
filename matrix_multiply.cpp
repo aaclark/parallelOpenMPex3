@@ -3,6 +3,15 @@
 #include <chrono>       // time it
 
 
+
+#include "matrix_t.cpp"
+
+// Do we have our types?
+#ifndef double_t /*implementation defined*/
+#define double_t double
+#endif
+
+
 void usage(char* argv[]) {
     std::cerr << "Usage: \n"
               << argv[0] << " <size N> <exp K>\n"
@@ -17,10 +26,10 @@ int main(int argc, char* argv[]) {
     }
 
     int size_N = std::atoi(argv[1]);
-    int tracked_variable_2 = std::atoi(argv[2]);
+    int exp_K = std::atoi(argv[2]);
 
-    if(size_N <= 0 || tracked_variable_2 <= 0) {
-        std::cerr << "Arguments must be positive integers" << std::endl;
+    if(size_N < 0 || exp_K < 0) {
+        std::cerr << "Arguments must be non-negative integers" << std::endl;
         usage(argv);
     }
 
@@ -36,6 +45,12 @@ int main(int argc, char* argv[]) {
     /**
      * DO STUFF HERE
      */
+    matrix<double_t> a,b,c,d,e;
+    a.resize(size_N,1.0).diagonal(4);
+    b.resize(size_N,-2).diagonal(9.0);
+    a(0,0)=0.0;
+    b(0,0)=0.0;
+    c = a*b;
 
     // Stop the clock!
     auto t2 = high_resolution_clock::now();
@@ -43,6 +58,8 @@ int main(int argc, char* argv[]) {
 
     // Print results and net runtime of running <STUFF>
     std::cout << std::left
-        << std::setfill(' ') << std::setw(10) << std::setprecision(10) << ms_double.count() << std::endl;
+              << std::setfill(' ') << std::setw(8) << std::setprecision(2) << size_N
+              << std::setfill(' ') << std::setw(8) << std::setprecision(2) << exp_K
+              << std::setfill(' ') << std::setw(10) << std::setprecision(10) << ms_double.count() << std::endl;
     return EXIT_SUCCESS;
 }
