@@ -2,7 +2,7 @@
 #include <iomanip>      // setfill, setw
 #include <chrono>       // time it
 
-
+#include <random>
 
 #include "matrix_t.cpp"
 
@@ -39,18 +39,32 @@ int main(int argc, char* argv[]) {
     using std::chrono::duration;
     using std::chrono::milliseconds;
 
+    /* set up random number generator */
+    std::random_device rd;
+    std::mt19937 engine(rd());
+    std::uniform_real_distribution<double_t> uniform_double(-250, 250.0);
+    std::uniform_int_distribution<int> uniform_selection(0, size_N - 1);
+
+
+
+    /**
+     * SETUP HERE
+     */
+
+    matrix<double_t> a,b,c,d,e;
+    a.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
+    b.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
+    a(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
+    b(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
+
+
     // Start the clock!
     auto t1 = high_resolution_clock::now();
 
     /**
-     * DO STUFF HERE
+     * DO TIMED STUFF HERE
      */
-    matrix<double_t> a,b,c,d,e;
-    a.resize(size_N,1.0).diagonal(4);
-    b.resize(size_N,-2).diagonal(9.0);
-    a(0,0)=0.0;
-    b(0,0)=0.0;
-    c = a*b;
+    c = (a*b)*(a*b)*(a*b);
 
     // Stop the clock!
     auto t2 = high_resolution_clock::now();

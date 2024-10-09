@@ -41,6 +41,9 @@ public:
         return this->N == other.N;
     }
 
+    /**
+     * Matrix multiplication
+     */
     matrix<T> operator*(matrix<T> other) {
         /* static scheduling of matrix multiplication loops */
         //int dim = 3; // N = 3
@@ -60,12 +63,12 @@ public:
             }
         }
 
-        (*this).show();
-        std::cout << "    *    " << std::endl;
-        (other).show();
-        std::cout << "--------" << std::endl;
-        c.show();
-        std::cout << std::endl;
+//        (*this).show();
+//        std::cout << "    *    " << std::endl;
+//        (other).show();
+//        std::cout << "--------" << std::endl;
+//        c.show();
+//        std::cout << std::endl;
 
         return c;
     }
