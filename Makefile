@@ -69,7 +69,7 @@ CC				=		$(CXX)	# Hack to force make to use clang++ (instead of cc)
 TARGETS	= 	matrix_multiply
 
 .PHONY: all
-all: $(TARGETS)
+all: clean depend $(TARGETS)
 
 
 matrix_multiply: matrix_t.o
