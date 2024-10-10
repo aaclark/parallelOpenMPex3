@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
     << "N="         << std::setw(8) << std::setprecision(4) << size_N
-    << "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
+    //<< "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
     << "dt="        << std::setw(8) << std::setprecision(4) << ms_double.count() << "ms"
     << std::endl;
 
