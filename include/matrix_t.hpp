@@ -34,18 +34,31 @@ public:
 //    matrix<T> operator*(matrix<T> other);
 //    matrix<T> operator^(int exponent);
 
+    /**
+     * Sequential implementation A(x,y)
+     * Accessor for entry at (x,y)
+     * @param other
+     * @return & T
+     */
     T& operator()(int x, int y){
         return values.at(addr(x, y));
     };
 
+    /**
+     * Parallel implementation A*B
+     * Multiplies matrix A by matrix B
+     * @param other
+     * @return * matrix<T>
+     */
     bool operator&&(matrix<T> other) {
         return this->N == other.N;
     }
 
     /**
      * Parallel implementation A*B
+     * Multiplies matrix A by matrix B
      * @param other
-     * @return
+     * @return * matrix<T>
      */
     matrix<T> operator*(matrix<T> other) {
         /* static scheduling of matrix multiplication loops */
@@ -72,6 +85,12 @@ public:
         return c;
     }
 
+    /**
+     * Sequential implementation A^k
+     * Multiplies matrix A by itself k times
+     * @param other
+     * @return * matrix<T>
+     */
     matrix<T>& operator^(const int exponent){
         matrix<T> c; // NxN matrix = {v ... v}
         c.resize(N);

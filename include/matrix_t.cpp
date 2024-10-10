@@ -5,6 +5,14 @@
 
 #include "matrix_t.hpp"
 
+/**
+ * C++ Default implementation A.resize(n,val)
+ * Resizes matrix A to n*n with default entries val
+ * @tparam T
+ * @param n
+ * @param val
+ * @return
+ */
 template <typename T>
 matrix<T>&  matrix<T>::resize(const int n, const T& val) {
     N = n;
@@ -13,7 +21,8 @@ matrix<T>&  matrix<T>::resize(const int n, const T& val) {
 };
 
 /**
- * Parallel implementation A.fill(v)
+ * C++ Default implementation A.fill(val)
+ * Fills matrix A with val
  * @tparam T
  * @param val
  * @return * matrix<T>
@@ -23,12 +32,28 @@ matrix<T>& matrix<T>::fill(const T& val) {
     std::fill(values.begin(), values.end(),val);
     return *this;
 };
+
+/**
+ * Sequential implementation A.diagonal(val)
+ * Sets the diagonal entries of A to val
+ * @tparam T
+ * @param val
+ * @return * matrix<T>
+ */
 template <typename T>
 matrix<T>& matrix<T>::diagonal(const T& val) {
     // 0; N+1; 2N+2; 3N+3; ...
     for(int i = 0; i < N; i++) values.at(addr(i,i)) = val;
     return *this;
 };
+
+/**
+ * Parallel implementation A.upper(val)
+ * Fills the upper-triangular portion of A with val
+ * @tparam T
+ * @param val
+ * @return * matrix<T>
+ */
 template <typename T>
 matrix<T>& matrix<T>::upper(const T& val) {
     // 0; N+1; 2N+2; 3N+3; ...
