@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     /* set up random number generator */
     std::random_device rd;
     std::mt19937 engine(rd());
-    std::uniform_real_distribution<double_t> uniform_double(-250, 250.0);
+    std::uniform_real_distribution<double_t> uniform_double(-10, 10);
     std::uniform_int_distribution<int> uniform_selection(0, size_N - 1);
 
 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
      * SETUP HERE
      */
 
-    matrix<double_t> a,b,c,d,e;
+    matrix<double_t> a,b,c;
     a.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
     b.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
     a(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
@@ -63,16 +63,19 @@ int main(int argc, char* argv[]) {
     /**
      * DO TIMED STUFF HERE
      */
-    c = (a*b)*(a*b)*(a*b);
+    c = (a*b);
+    c(size_N-1,size_N-1) = (double)1.0;
 
     // Stop the clock!
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
 
     // Print results and net runtime of running <STUFF>
-    std::cout << std::left
-              << std::setfill(' ') << std::setw(8) << std::setprecision(2) << size_N
-              << std::setfill(' ') << std::setw(8) << std::setprecision(2) << exp_K
-              << std::setfill(' ') << std::setw(10) << std::setprecision(10) << ms_double.count() << std::endl;
+    std::cout << std::left<< std::setfill(' ')
+    << "N="         << std::setw(8) << std::setprecision(4) << size_N
+    << "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
+    << "dt="        << std::setw(8) << std::setprecision(4) << ms_double.count() << "ms"
+    << std::endl;
+
     return EXIT_SUCCESS;
 }
