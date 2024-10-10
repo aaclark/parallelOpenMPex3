@@ -72,8 +72,9 @@ TARGETS	= 	matrix_multiply
 .PHONY: all
 all: clean depend $(TARGETS)
 
+-include *.d
 
-matrix_multiply: matrix_t.o
+#matrix_multiply: matrix_t.o
 
 
 %.o: %.cpp %.hpp
