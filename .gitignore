@@ -8,6 +8,7 @@
 
 # Specific dirs to ignore
 documents
+include
 lib
 
 ### C++ ###
