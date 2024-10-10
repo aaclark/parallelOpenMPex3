@@ -26,9 +26,8 @@ int main(int argc, char* argv[]) {
     }
 
     int size_N = std::atoi(argv[1]);
-    int exp_K = std::atoi(argv[2]);
 
-    if(size_N < 0 || exp_K < 0) {
+    if(size_N < 0) {
         std::cerr << "Arguments must be non-negative integers" << std::endl;
         usage(argv);
     }
