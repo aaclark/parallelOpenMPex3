@@ -67,13 +67,13 @@ public:
 
         return c;
     }
-    matrix<T> operator^(const int exponent) const{
+    matrix<T>& operator^(const int exponent){
         matrix<T> c; // NxN matrix = {v ... v}
         c.resize(N);
         c.diagonal(1.0);
-        if(exponent == 0)
+        if(exponent == 1)
             return *this;
-        return this*(this^(exponent-1));
+        return (*this)*((*this)^(exponent-1));
     }
 
 
