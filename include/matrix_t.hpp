@@ -43,7 +43,9 @@ public:
     }
 
     /**
-     * Matrix multiplication
+     * Parallel implementation A*B
+     * @param other
+     * @return
      */
     matrix<T> operator*(matrix<T> other) {
         /* static scheduling of matrix multiplication loops */
@@ -69,6 +71,7 @@ public:
 
         return c;
     }
+
     matrix<T>& operator^(const int exponent){
         matrix<T> c; // NxN matrix = {v ... v}
         c.resize(N);

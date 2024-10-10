@@ -11,6 +11,13 @@ matrix<T>&  matrix<T>::resize(const int n, const T& val) {
     values.resize(N * N, val);
     return *this;
 };
+
+/**
+ * Parallel implementation A.fill(v)
+ * @tparam T
+ * @param val
+ * @return * matrix<T>
+ */
 template <typename T>
 matrix<T>& matrix<T>::fill(const T& val) {
     std::fill(values.begin(), values.end(),val);
