@@ -4,6 +4,7 @@
 
 # Find and specify build files
 SRCS 			= 		$(shell find . -type f -iname '*.cc' -o -iname '*.cpp')
+HDFS			= 		$(shell find . -type f -iname '*.h' -o -iname '*.hpp')
 OBJS			=		$(SRCS:%.cpp=%.o)
 DEPS			=		$(shell find . -type f -iname '*.cpp') #$(OBJS:%.o=%.d)
 
