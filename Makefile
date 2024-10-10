@@ -20,8 +20,8 @@ ifeq ($(UNAME_S),Darwin)
 endif
 
 # Ensures IDEs can see local includes as a last resort
-LOC_INC 		=		-I"$(shell realpath ./include)"  # TODO change this
-LOC_LIB			=		-L"$(shell realpath ./lib)"  # TODO change this
+LOC_INC 		=		-I"$(shell realpath ./include)"
+LOC_LIB			=		-L"$(shell realpath ./lib)"
 
 # Feature Toggles (can be overridden from the command line)
 DEBUG			?=		0
@@ -89,9 +89,7 @@ clean:
 
 .PHONEY: depend
 depend: $(SRCS)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -MMD $^
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) -c -MMD $^
 	@sed -i'~' "s|^\(.*\)\.o: \(.*\)\1|\2\1.o: \2\1|g" $(DEPS)
 
-
--include *.d
 .DEFAULT_GOAL=all
