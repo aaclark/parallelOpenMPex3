@@ -10,7 +10,7 @@ DEPS			=		$(shell find . -type f -iname '*.cpp') #$(OBJS:%.o=%.d)
 
 
 # Feature Toggles (can be overridden from the command line: make target DEBUG=1 )
-DEBUG			?=		0
+DEBUG			?=		1
 PTHREAD			?=		0 #OpenMP implies pthread
 OPENMP			?=		1 #OpenMP implies pthread
 
