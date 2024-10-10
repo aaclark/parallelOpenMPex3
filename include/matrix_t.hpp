@@ -28,6 +28,7 @@ public:
     matrix<T>& resize(int n, const T& val = 0);
     matrix<T>& fill(const T& val);
     matrix<T>& diagonal(const T& val);
+    matrix<T>& upper(const T& val);
 
 //    T& operator()(int x, int y);
 //    matrix<T> operator*(matrix<T> other);
