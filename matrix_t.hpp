@@ -1,5 +1,8 @@
 #ifndef matrix_t_hpp
 #define matrix_t_hpp
+//#ifdef vec_t_hpp
+//#include "matrix_vec_shared_t.hpp"
+//#endif
 
 #include <vector>
 #include <cstdio>
@@ -10,29 +13,30 @@
 
 template <typename T>
 class matrix {
-    int N {};
+    int N {0};
     std::vector<T> values;
     int addr(int x, int y) const{return (x+N*y);}
     T& operator()(int x, int y) const{
         return (values.at(addr(x, y)));
     };
 public:
+    int size() {return N;}
     void show() {
         for (int y=0; y<N; y++) {
             for (int x = 0; x < N; x++) {
-                std::cout << std::left << std::setfill(' ') << std::setw(10) << std::setprecision(4) << (*this)(x,y);
+                std::cout << std::left << std::setfill(' ') << std::setw(8) << std::setprecision(4) << (*this)(x,y);
             }
             std::cout << std::endl;
         }
     }
+
+    // Matrix operations
+
     matrix<T>& resize(int n, const T& val = 0);
     matrix<T>& fill(const T& val);
     matrix<T>& diagonal(const T& val);
     matrix<T>& upper(const T& val);
 
-//    T& operator()(int x, int y);
-//    matrix<T> operator*(matrix<T> other);
-//    matrix<T> operator^(int exponent);
 
     /**
      * Sequential implementation A(x,y)
@@ -100,6 +104,13 @@ public:
         return (*this)*((*this)^(exponent-1));
     }
 
+    /**
+     * C++ Default implementation M && V
+     * Checks that M has dim. equal to V have equal length
+     * @param other
+     * @return bool
+     */
+    //friend bool operator&&(const matrix<T>&, const vec<T>&);
 
     /* default implementations:
      * default constructor
