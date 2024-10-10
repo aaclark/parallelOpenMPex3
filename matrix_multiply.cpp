@@ -52,10 +52,11 @@ int main(int argc, char* argv[]) {
 
     matrix<double_t> a,b,c;
     a.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
-    b.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
+    b.resize(size_N,1).upper(uniform_double(engine));
     a(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
-    b(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
+    //b(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
 
+    b.show();
 
     // Start the clock!
     auto t1 = high_resolution_clock::now();
