@@ -50,10 +50,13 @@ int main(int argc, char* argv[]) {
      * SETUP HERE
      */
 
-    matrix<double_t> a,b,c;
-    a.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
-    b.resize(size_N,1).upper(uniform_double(engine));
-    a(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
+    matrix<double_t> a,b,c; // Declare
+    a.resize(size_N, uniform_double(engine))        // Initialize
+    .diagonal(uniform_double(engine));                  // Modify: set the diagonals to V
+    b.resize(size_N,1)                                  // Initialize
+    .upper(uniform_double(engine));                     // Modify: set upper triangle to V
+    a(uniform_selection(engine),uniform_selection(engine))
+    =uniform_double(engine);                                // Modify: set a random entry to V
     //b(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
 
     b.show();
