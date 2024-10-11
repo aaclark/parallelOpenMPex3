@@ -76,8 +76,9 @@ TARGETS	= 	matrix_multiply gaussian_elimination
 all: depend $(TARGETS)
 
 
-#%.o: %.cpp %.hpp
-#	$(CXX) $(CXXFLAGS) -c $< -o $@
+.PHONY: echo
+echo:
+	@echo "[DEBUG:$(DEBUG)]\n[OPENMP:$(OPENMP)]\n[CXX:$(CXX)]\n[CPPFLAGS:$(CPPFLAGS)]\n[CXXFLAGS:$(CXXFLAGS)]\n[LDFLAGS:$(LDFLAGS)]"
 
 
 .PHONY: clean
