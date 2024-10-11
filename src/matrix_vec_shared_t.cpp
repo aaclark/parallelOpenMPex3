@@ -1,5 +1,17 @@
 #include "matrix_vec_shared_t.hpp"
 
+/**
+ * Loop Analysis:
+ * for i = lower, upper, stride; { a(i) }
+ * --> for i’ = 0, (upper – lower + stride)/stride – 1, 1; {a(i’*stride + lower)}
+ * let i' = _L1 ; j' = _L2 ; etc.
+ * auto _UPPER_NORM = [](int l, int u, int s)->int{return (u - l + s)/s - 1;};
+ * auto _INDEX_NORM = [](int idx, int l, int s)->int{return idx*s+l;};
+ */
+auto _norm_N = [](int l, int s, int u)->int{return (u - l + s)/s - 1;};
+auto _norm_fn_idx = [](int l, int s, int u){return [l,s](int idx){return idx*s+l;};};
+//auto INDEX_NORM = [](int l, int s, int i){return i*s+l;};
+
 template <typename T>
 bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
     int N = A.size();
@@ -19,6 +31,9 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
          * Loop Analysis:
          * for i = lower, upper, stride; { a(i) }
          * --> for i’ = 0, (upper – lower + stride)/stride – 1, 1; {a(i’*stride + lower)}
+         * let i' = _L1 ; j' = _L2 ; etc.
+         * auto _UPPER_NORM = lambda [](int l, int u, int s)->int{return (u - l + s)/s - 1;};
+         * auto _INDEX_NORM = lambda [](int l, int u, int s)->int{return lambda [](int idx){return idx*s+l;};};
          */
         int _L1 = 0;
         int _L1_N = ((N - 1)-(0)+(-1))/(-1)-1;
