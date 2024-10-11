@@ -59,12 +59,8 @@ int main(int argc, char* argv[]) {
 
     //a.show();
     b.resize(A.size(),1);
-
-    A.show();
-    std::cout << std::endl << std::endl;
-
-    b.show();
-    std::cout << std::endl << std::endl;
+    //A.show(); std::cout << std::endl << std::endl;
+    //b.show(); std::cout << std::endl << std::endl;
 
     // Start the clock!
     auto t1 = high_resolution_clock::now();
@@ -72,15 +68,16 @@ int main(int argc, char* argv[]) {
     /**
      * DO TIMED STUFF HERE
      */
-     // Ax = b
+
+    // Ax = b
     solve_c(A, x, b);
     x.show();
     std::cout << std::endl << std::endl;
+    //x.show(); std::cout << std::endl << std::endl;
 
     // Ax = b
     solve_r(A, x, b);
-    x.show();
-    std::cout << std::endl << std::endl;
+    //x.show(); std::cout << std::endl << std::endl;
 
     // Stop the clock!
     auto t2 = high_resolution_clock::now();
