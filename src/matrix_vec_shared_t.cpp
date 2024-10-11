@@ -17,6 +17,10 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
          *      for (i = begin, (i<) end, (i+=) stride) { a(i) }
          * To:
          *      for (i’ = 0, (end – begin + stride)/stride – 1, 1) {a(i’*stride + begin)}
+         * Such that for each loop depth we have:
+         *      for (L1 : 0 .. M)
+         *          for (L2 : 0 .. N)
+         *              ...
          *
          * auto _norm_N = [](int begin, int stride, int end)->int{return (end - begin + stride) / stride - 1;};
          * auto _norm_fn_idx = [](int begin, int stride, int end){return [begin,stride](int idx){return idx * stride + begin;};};
@@ -30,15 +34,6 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         for (row = 0; row < A_M; row++) {
             x(row) = b(row);
         }
-        /**
-         * Loop Analysis:
-         * for i = lower, upper, stride; { a(i) }
-         * --> for i’ = 0, (upper – lower + stride)/stride – 1, 1; {a(i’*stride + lower)}
-         * let i' = _L1 ; j' = _L2 ; etc.
-         * auto _UPPER_NORM = lambda [](int l, int u, int s)->int{return (u - l + s)/s - 1;};
-         * auto _INDEX_NORM = lambda [](int l, int u, int s)->int{return lambda [](int idx){return idx*s+l;};};
-         */
-
 
         // fn. such that j(L1) = j
         auto j = _norm_fn_idx(A_M-1, -1, -1);
