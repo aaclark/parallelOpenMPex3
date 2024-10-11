@@ -39,15 +39,25 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         auto j = _norm_fn_idx(A_M-1, -1, -1);
         int L1;
         int L1N = _norm_N(A_M-1, -1, -1);
+        // for (L1 : 0 .. L1N)
+
         for (L1 = 0; L1 < L1N; L1++) {
-            x(j(L1)) /= A(j(L1), j(L1));
+            T val_x_L1 = x(j(L1)); // READ
+            T val_A_L1_L1 = (A(j(L1), j(L1))); // READ
+            x(j(L1)) = val_x_L1 / val_A_L1_L1; // WRITE
+//            x(j(L1)) /= A(j(L1), j(L1));
 
             // fn. such that i(L2) = i
             auto i = _norm_fn_idx(0, 1, j(L1));
             int L2;
-            int L2N = _norm_N(0, 1, j(L1));
+            int L2N = _norm_N(0, 1, j(L1)); // L2N = {0 .. L1 -1}
             for (L2 = 0; L2 < L2N; L2++) {
-                x(i(L2)) -= A(i(L2), j(L1)) * x(j(L1));
+                T val_x_L2 = x(i(L2)); // READ
+                T val_A_L2_L1 = (A(i(L2), j(L1))); // READ
+                T val_x_L1_ = x(j(L1)); // READ SHADOWS OUTER
+                T mul_A_L2_L1_val_x_L1 = val_A_L2_L1 * val_x_L1; // MUL
+                x(i(L2)) = val_x_L2 - mul_A_L2_L1_val_x_L1; // WRITE
+//                x(i(L2)) -= A(i(L2), j(L1)) * x(j(L1));
             }
         }
 
