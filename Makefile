@@ -36,7 +36,12 @@ CPPFLAGS  +=  -I"$(shell realpath ./include)"
 ########
 # ASSEMBLE/COMPILE STAGE
 ########
-CXX				=		clang++
+TOOLCHAIN = clang++ # prefer clang++
+CHECK_CLANG = $(shell which $(TOOLCHAIN))
+ifeq (,$(CHECK_CLANG)) # no clang++
+	TOOLCHAIN = g++
+endif
+CXX				=		$(TOOLCHAIN)
 CC				=		$(CXX)	# Hack to force make to use clang++ (instead of cc)
 CXXFLAGS		+=		-std=c++11
 ifeq ($(DEBUG),1)
