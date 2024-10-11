@@ -65,7 +65,6 @@ matrix<T>& matrix<T>::diagonal(const T& val) {
 template <typename T>
 matrix<T>& matrix<T>::upper(const T& val) {
     // 0; N+1; 2N+2; 3N+3; ...
-
     long resize_to = (N*N);
     long current_size = values.size();
     long current_cap = values.capacity();
@@ -74,6 +73,17 @@ matrix<T>& matrix<T>::upper(const T& val) {
 //        std::cerr << "Cannot resize to specified dimensions: " << (N*N) << " > " << vec_max << std::endl;
         exit(EXIT_FAILURE);
     }
+    /**
+     * TODO fix:
+     * When N = 100,000
+     * (N*N) gets stuck evaluating to 1,410,065,408
+     * because 100,000 = 10,000,000,000 > 4,294,967,295
+     * so we get integer overflow
+     * then i == 14100
+     * goes out of bounds and EXC_BAD_ACCESS
+     * since (14100 + 1)*(N) = 1,410,100,000 > 1,410,065,408
+     * and values.begin() + 1,410,100,000 is out of bounds.
+     */
 #pragma omp for
     for(int i = 0; i < N; i++) {    // eg. N = 5
         //auto iter_a = std::next(values.begin(),((i)*(N))); // 0, 5, 10
