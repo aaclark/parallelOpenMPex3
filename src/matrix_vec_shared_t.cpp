@@ -35,16 +35,21 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
          * auto _UPPER_NORM = lambda [](int l, int u, int s)->int{return (u - l + s)/s - 1;};
          * auto _INDEX_NORM = lambda [](int l, int u, int s)->int{return lambda [](int idx){return idx*s+l;};};
          */
-        int _L1 = 0;
-        int _L1_N = ((N - 1)-(0)+(-1))/(-1)-1;
-        auto _L1_i = [_L1]()->int{return ((-1)*_L1)+(0);};
-        int _L2 = 0;
-        int _L2_N = ((N - 1)-(0)+(-1))/(-1)-1;
-        auto _L2_i = [_L1]()->int{return ((-1)*_L1)+(0);};
-        for (col = N - 1; col >= 0; col--) {
-            x(col) /= A(col, col);
-            for (row = 0; row < col; row++) {
-                x(row) -= A(row, col) * x(col);
+
+
+        // fn. such that j(_1) = j
+        auto j = _norm_fn_idx(0,-1,N);
+        int _1;
+        int _1N = _norm_N(0,-1,N);
+        for (_1 = 0; _1 < _1N; _1++) {
+            x(j(_1)) /= A(j(_1), j(_1));
+
+            // fn. such that i(_2) = i
+            auto i = _norm_fn_idx(0,1,j(_1));
+            int _2;
+            int _2N = _norm_N(0,1,j(_1));
+            for (_2 = 0; _2 < _2N; _2++) {
+                x(i(_2)) -= A(i(_2), j(_1)) * x(j(_1));
             }
         }
 
