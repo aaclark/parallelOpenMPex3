@@ -47,6 +47,13 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
                 x(row) -= A(row, col) * x(col);
             }
         }
+
+//        for (j = N - 1; j >= 0; j--) {
+//            x(j) /= A(j, j);
+//            for (i = 0; i < j; i++) {
+//                x(i) -= A(i, j) * x(j);
+//            }
+//        }
     }
     return true;
 }
