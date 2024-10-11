@@ -15,16 +15,16 @@ template <typename T>
 class matrix {
     int N {0};
     std::vector<T> values;
-    int addr(int x, int y) const{return (x+N*y);}
-    T& operator()(int x, int y) const{
-        return (values.at(addr(x, y)));
+    int addr(int row, int i) const{return (N * row) + i;}
+    T& operator()(int row, int i) const{
+        return (values.at(addr(row, i)));
     };
 public:
     int size() {return N;}
     void show() {
-        for (int y=0; y<N; y++) {
-            for (int x = 0; x < N; x++) {
-                std::cout << std::left << std::setfill(' ') << std::setw(8) << std::setprecision(4) << (*this)(x,y);
+        for (int row=0; row < N; row++) { // for each ROW:
+            for (int i = 0; i < N; i++) { // for each index {x_0, x_1 ...} :
+                std::cout << std::left << std::setfill(' ') << std::setw(8) << std::setprecision(4) << (*this)(row, i);
             }
             std::cout << std::endl;
         }
@@ -39,13 +39,13 @@ public:
 
 
     /**
-     * Sequential implementation A(x,y)
-     * Accessor for entry at (x,y)
+     * Sequential implementation A(row, i)
+     * Accessor for entry at (row, i)
      * @param other
      * @return & T
      */
-    T& operator()(int x, int y){
-        return values.at(addr(x, y));
+    T& operator()(int row, int i){
+        return values.at(addr(row, i));
     };
 
     /**
@@ -71,16 +71,16 @@ public:
         matrix<T> c; // NxN matrix = {v ... v}
         c.resize(N);
 
-        int i, j, k;
+        int row, i, j;
         // TODO FIX: ‘this’ allowed in OpenMP only in ‘declare simd’ clauses
-#pragma omp parallel default(none) private(i,j,k) shared(other, c)
+#pragma omp parallel default(none) private(row,i,j) shared(other, c)
         {
 #pragma omp for schedule(static)
-            for (i = 0; i < N; i++) {
-                for (j = 0; j < N; j++) {
-                    c(i, j) = 0;
-                    for (k = 0; k < N; k++) {
-                        c(i, j) += (T)(*this)(i, k) * other(k, j);
+            for (row = 0; row < N; row++) { // row
+                for (i = 0; i < N; i++) {
+                    c(row, i) = 0;
+                    for (j = 0; j < N; j++) {
+                        c(row, i) += (T)(*this)(row, j) * other(j, i);
                     }
                 }
             }
