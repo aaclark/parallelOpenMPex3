@@ -37,9 +37,11 @@ CPPFLAGS  +=  -I"$(shell realpath ./include)"
 # ASSEMBLE/COMPILE STAGE
 ########
 TOOLCHAIN = clang++ # prefer clang++
+THREADSAFETY = -Wthread-safety
 CHECK_CLANG = $(shell which $(TOOLCHAIN))
 ifeq (,$(CHECK_CLANG)) # no clang++
 	TOOLCHAIN = g++
+	THREADSAFETY =
 endif
 CXX				=		$(TOOLCHAIN)
 CC				=		$(CXX)	# Hack to force make to use clang++ (instead of cc)
@@ -47,7 +49,7 @@ CXXFLAGS		+=		-std=c++11
 ifeq ($(DEBUG),1)
 CXXFLAGS	+=	-v
 CXXFLAGS	+=	-g #-Og
-CXXFLAGS	+=	-Wall -Wextra -Wthread-safety
+CXXFLAGS	+=	-Wall -Wextra $(THREADSAFETY)
 else
 CXXFLAGS	+=	-O3
 endif
