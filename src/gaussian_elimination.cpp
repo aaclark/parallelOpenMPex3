@@ -71,24 +71,31 @@ int main(int argc, char* argv[]) {
 
     // Ax = b
     solve_c(A, x, b);
-    x.show();
-    std::cout << std::endl << std::endl;
     //x.show(); std::cout << std::endl << std::endl;
+
+    // Stop the clock!
+    auto t2 = high_resolution_clock::now();
+    duration<double, std::milli> ms_double_c = t2 - t1;
+
+    /**
+     * DO TIMED STUFF HERE
+     */
 
     // Ax = b
     solve_r(A, x, b);
     //x.show(); std::cout << std::endl << std::endl;
 
     // Stop the clock!
-    auto t2 = high_resolution_clock::now();
-    duration<double, std::milli> ms_double = t2 - t1;
+    auto t3 = high_resolution_clock::now();
+    duration<double, std::milli> ms_double_r = t3 - t2;
 
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
-              << "N="         << std::setw(8) << std::setprecision(4) << size_N
-              //<< "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
-              << "dt="        << std::setw(8) << std::setprecision(4) << ms_double.count() << "ms"
-              << std::endl;
+    << "N="         << std::setw(8) << std::setprecision(4) << size_N
+    //<< "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
+    << "solve_c="        << std::setw(8) << std::setprecision(4) << ms_double_c.count() << "ms "
+    << "solve_r="        << std::setw(8) << std::setprecision(4) << ms_double_r.count() << "ms "
+    << std::endl;
 
     return EXIT_SUCCESS;
 }
