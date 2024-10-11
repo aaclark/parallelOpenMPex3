@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
 
-    c.show();
+    //c.show(); std::cout << std::endl << std::endl;
 
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
