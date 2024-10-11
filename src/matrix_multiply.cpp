@@ -1,10 +1,13 @@
 #include <iostream>     // std::cerr
 #include <iomanip>      // setfill, setw
+#include <cstring>      // for strcmp on linux clang
 #include <chrono>       // time it
 
 #include <random>
 
 #include "matrix_t.cpp"
+
+#include "omp.h"
 
 // Do we have our types?
 #ifndef double_t /*implementation defined*/
