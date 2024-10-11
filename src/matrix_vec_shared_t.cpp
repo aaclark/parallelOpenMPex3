@@ -42,28 +42,31 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         // for (L1 : 0 .. L1N)
 
         for (L1 = 0; L1 < L1N; L1++) {
-            T val_x_L1 = x(j(L1)); // READ
-            T val_A_L1_L1 = (A(j(L1), j(L1))); // READ
-            x(j(L1)) = val_x_L1 / val_A_L1_L1; // WRITE
-//            x(j(L1)) /= A(j(L1), j(L1));
+            col = j(L1);
+            T val_x_L1 = x(col); // READ
+            T val_A_L1_L1 = (A(col, col)); // READ
+            x(col) = val_x_L1 / val_A_L1_L1; // WRITE
+            // x(col) /= A(col, col);
 
-            // fn. such that i(L2) = i
+            // fn. such that i(L2) = i = row
             auto i = _norm_fn_idx(0, 1, j(L1));
             int L2;
             int L2N = _norm_N(0, 1, j(L1)); // L2N = {0 .. L1-1}
             for (L2 = 0; L2 < L2N; L2++) {
-                T val_x_L2 = x(i(L2)); // READ
-                T val_A_L2_L1 = (A(i(L2), j(L1))); // READ
-                T val_x_L1_ = x(j(L1)); // READ SHADOWS OUTER
+                row = i(L2);
+                T val_x_L2 = x(row); // READ
+                T val_A_L2_L1 = (A(row, col)); // READ
+                T val_x_L1_ = x(col); // READ SHADOWS OUTER
                 T mul_A_L2_L1_val_x_L1 = val_A_L2_L1 * val_x_L1; // MUL
-                x(i(L2)) = val_x_L2 - mul_A_L2_L1_val_x_L1; // WRITE
-//                x(i(L2)) -= A(i(L2), j(L1)) * x(j(L1));
+                x(row) = val_x_L2 - mul_A_L2_L1_val_x_L1; // WRITE
+                // x(row) -= A(row, col) * x(col);
             }
         }
 
         /**
         for (row = 0; row < n; row++)
             x[row] = b[row];
+
         for (col = n-1; col >= 0; col--) {
             x[col] /= A[col][col];
             for (row = 0; row < col; row++)
