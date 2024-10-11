@@ -39,7 +39,7 @@ CC				=		$(CXX)	# Hack to force make to use clang++ (instead of cc)
 CXXFLAGS		+=		-std=c++11
 ifeq ($(DEBUG),1)
 	CXXFLAGS	+=	-v
-	CXXFLAGS	+=	-g -Og
+	CXXFLAGS	+=	-g #-Og
 	CXXFLAGS	+=	-Wall -Wextra -Wthread-safety
 		ifeq ($(OPENMP),1)
 	CXXFLAGS  +=  -fsanitize=thread -fno-omit-frame-pointer
