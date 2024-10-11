@@ -2,12 +2,12 @@
 
 template <typename T>
 bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
-    int A_M = A.size();
-    int b_N = b.size();
+    int A_M = A.size(); // A_M = width(M)
+    int b_N = b.size(); // b_N = |b|
     if (b_N != A_M)
         return false;
     int row, col;
-    x.resize(A_M); // st. x_N = b_N
+    x.resize(A_M); // such that |x| = |b| and |x| = width(M)
 //#pragma omp parallel default(none) private(b_N,A_M,row,col) shared(A,x,b) num_threads(8)
     {
 
