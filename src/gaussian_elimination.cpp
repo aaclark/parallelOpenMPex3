@@ -55,9 +55,8 @@ int main(int argc, char* argv[]) {
     matrix<double_t> A; // Declare
     vec<double_t> b, x;    // Declare
     //uniform_double(engine)
-    A.resize(size_N).upper(2.0);     // Modify: set upper triangle to V
-
-    //a.show();
+    A.resize(size_N)
+    .upper(2.0);     // Modify: set upper triangle to V
     b.resize(A.size(),1);
     //A.show(); std::cout << std::endl << std::endl;
     //b.show(); std::cout << std::endl << std::endl;
