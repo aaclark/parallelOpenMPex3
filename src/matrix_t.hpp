@@ -73,7 +73,7 @@ public:
 
         int i, j, k;
         // TODO FIX: ‘this’ allowed in OpenMP only in ‘declare simd’ clauses
-#pragma omp parallel default(none) private(i,j,k) shared(this->values, other, c)
+#pragma omp parallel default(none) private(i,j,k) shared(other, c)
         {
 #pragma omp for schedule(static)
             for (i = 0; i < N; i++) {
