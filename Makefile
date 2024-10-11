@@ -61,8 +61,9 @@ LDFLAGS   +=  -L"/opt/libomp/lib"
 endif
 ifeq ($(UNAME_S),Darwin) # Workaround for OSX
 LDFLAGS   +=  -L"$(shell brew --prefix libomp)/lib"
+LDFLAGS   +=  -lomp # for some reason "-lomp" is required here
 endif
-LDFLAGS  +=  -pthread -fsanitize=thread -fno-omit-frame-pointer -lomp # for some reason "-lomp" is required here
+LDFLAGS  +=  -pthread -fsanitize=thread -fno-omit-frame-pointer
 endif
 # Local dylib if necessary
 LDFLAGS   +=  -L"$(shell realpath ./lib)"
