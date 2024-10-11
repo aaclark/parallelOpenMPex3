@@ -37,7 +37,7 @@ CPPFLAGS  +=  -I"$(shell realpath ./include)"
 # ASSEMBLE/COMPILE STAGE
 ########
 TOOLCHAIN = clang++ # prefer clang++
-THREADSAFETY = -Wthread-safety
+THREADSAFETY = -Wthread-safety # only clang++ supports this
 CHECK_CLANG = $(shell which $(TOOLCHAIN))
 ifeq (,$(CHECK_CLANG)) # no clang++
 	TOOLCHAIN = g++
