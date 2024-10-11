@@ -56,13 +56,22 @@ int main(int argc, char* argv[]) {
      */
 
     matrix<double_t> A; // Declare
-    vec<double_t> b, x;    // Declare
+    vec<double_t> b, x, y;    // Declare
     //uniform_double(engine)
-    A.resize(size_N)
-    .upper(2.0);     // Modify: set upper triangle to V
-    b.resize(A.size(),1);
-    //A.show(); std::cout << std::endl << std::endl;
-    //b.show(); std::cout << std::endl << std::endl;
+    A.resize(3);
+    //.upper(2.0);     // Modify: set upper triangle to V
+    b.resize(A.size());
+
+    A(0,0) = 2.0;   A(0,1) =-3.0;
+                            A(1,1) = 1.0;   A(1,2) = 1.0;
+                                                    A(2,2) = -5.0;
+
+    b(0) = 3.0;
+    b(1) = 1.0;
+    b(2) = 0.0;
+
+    std::cout<<"A="<<std::endl;A.show(); std::cout << std::endl << std::endl;
+    std::cout<<"b="<<std::endl;b.show(); std::cout << std::endl << std::endl;
 
     // Start the clock!
     auto t1 = high_resolution_clock::now();
@@ -84,12 +93,15 @@ int main(int argc, char* argv[]) {
      */
 
     // Ax = b
-    solve_r(A, x, b);
-    //x.show(); std::cout << std::endl << std::endl;
+    solve_r(A, y, b);
 
     // Stop the clock!
     auto t3 = high_resolution_clock::now();
     duration<double, std::milli> ms_double_r = t3 - t2;
+
+    std::cout<<"x="<<std::endl; x.show(); std::cout << std::endl << std::endl;
+
+    std::cout<<"y="<<std::endl; y.show(); std::cout << std::endl << std::endl;
 
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
