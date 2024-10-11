@@ -3,8 +3,8 @@
 # Output file to store results
 output_file="benchmark_results.txt"
 
-# Matrix sizes to test; TODO: + 2500 5000
-matrix_sizes=$(seq 1 16)  #(100 250 500 1000)
+# optional Matrix sizes to test;
+#matrix_sizes=$(seq 1 16)
 
 # Number of threads to test
 thread_counts=(1 2 4 8 16 32)
