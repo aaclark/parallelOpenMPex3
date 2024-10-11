@@ -3,7 +3,7 @@
 #include <chrono>       // time it
 
 #include <random>
-
+#include <cstring>
 #include "matrix_t.cpp"
 
 // Do we have our types?
