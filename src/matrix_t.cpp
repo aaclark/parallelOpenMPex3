@@ -16,6 +16,14 @@
 template <typename T>
 matrix<T>&  matrix<T>::resize(const int n, const T& val) {
     N = n;
+    long resize_to = (N*N);
+    long current_size = values.size();
+    long current_cap = values.capacity();
+    long vec_max = values.max_size();
+    if(resize_to > vec_max) {
+//        std::cerr << "Cannot resize to specified dimensions: " << (N*N) << " > " << vec_max << std::endl;
+        exit(EXIT_FAILURE);
+    }
     values.resize(N * N, val);
     return *this;
 };
@@ -58,6 +66,14 @@ template <typename T>
 matrix<T>& matrix<T>::upper(const T& val) {
     // 0; N+1; 2N+2; 3N+3; ...
 
+    long resize_to = (N*N);
+    long current_size = values.size();
+    long current_cap = values.capacity();
+    long vec_max = values.max_size();
+    if((resize_to > vec_max) || (current_size < resize_to) || (sqrt(current_cap) < current_size)) {
+//        std::cerr << "Cannot resize to specified dimensions: " << (N*N) << " > " << vec_max << std::endl;
+        exit(EXIT_FAILURE);
+    }
 #pragma omp for
     for(int i = 0; i < N; i++) {    // eg. N = 5
         //auto iter_a = std::next(values.begin(),((i)*(N))); // 0, 5, 10
