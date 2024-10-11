@@ -56,8 +56,8 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
                 row = i(L2);
                 T val_x_L2 = x(row); // READ
                 T val_A_L2_L1 = (A(row, col)); // READ
-                T val_x_L1_ = x(col); // READ SHADOWS OUTER
-                T mul_A_L2_L1_val_x_L1 = val_A_L2_L1 * val_x_L1; // MUL
+                T val_x_L1_shadow = x(col); // READ SHADOWS OUTER
+                T mul_A_L2_L1_val_x_L1 = val_A_L2_L1 * val_x_L1_shadow; // MUL
                 x(row) = val_x_L2 - mul_A_L2_L1_val_x_L1; // WRITE
                 // x(row) -= A(row, col) * x(col);
             }
