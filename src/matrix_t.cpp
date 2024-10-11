@@ -16,15 +16,20 @@
 template <typename T>
 matrix<T>&  matrix<T>::resize(const int n, const T& val) {
     N = n;
-    long resize_to = (N*N);
+    long expected_size = ((long)N*(long)N);
     long current_size = values.size();
     long current_cap = values.capacity();
     long vec_max = values.max_size();
-    if(resize_to > vec_max) {
-//        std::cerr << "Cannot resize to specified dimensions: " << (N*N) << " > " << vec_max << std::endl;
+    if(expected_size > vec_max) {
+        std::cerr << "Cannot resize to expected:" << expected_size << ", current: " << current_size << ", cap: " << current_cap << " ]" << std::endl;
         exit(EXIT_FAILURE);
     }
-    values.resize(N * N, val);
+    values.resize(expected_size, val);
+    current_size = values.size();
+    if(expected_size < current_size) {
+        std::cerr << "Failed to resize! expected:" << expected_size << ", current: " << current_size << ", cap: " << current_cap << " ]" << std::endl;
+        exit(EXIT_FAILURE);
+    }
     return *this;
 };
 
@@ -65,12 +70,12 @@ matrix<T>& matrix<T>::diagonal(const T& val) {
 template <typename T>
 matrix<T>& matrix<T>::upper(const T& val) {
     // 0; N+1; 2N+2; 3N+3; ...
-    long resize_to = (N*N);
+    long expected_size = ((long)N * (long)N);
     long current_size = values.size();
     long current_cap = values.capacity();
     long vec_max = values.max_size();
-    if((resize_to > vec_max) || (current_size < resize_to) || (sqrt(current_cap) < current_size)) {
-//        std::cerr << "Cannot resize to specified dimensions: " << (N*N) << " > " << vec_max << std::endl;
+    if(expected_size > vec_max || expected_size > current_size) {
+        std::cerr << "Insufficient dimensions! expected:" << expected_size << ", current: " << current_size << ", cap: " << current_cap << " ]" << std::endl;
         exit(EXIT_FAILURE);
     }
     /**
