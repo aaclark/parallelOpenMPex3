@@ -8,12 +8,18 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         return false;
     int row, col;
     x.resize(N);
-    for (row = 0; row < N; row++)
-        x(row) = b(row);
-    for (col = N-1; col >= 0; col--) {
-        x(col) /= A(col,col);
-        for (row = 0; row < col; row++)
-            x(row) -= A(row,col) * x(col);
+//#pragma omp parallel default(none) private(M,N,row,col) shared(A,x,b) num_threads(8)
+    {
+//#pragma omp for schedule(static)
+        for (row = 0; row < N; row++) {
+            x(row) = b(row);
+        }
+        for (col = N - 1; col >= 0; col--) {
+            x(col) /= A(col, col);
+            for (row = 0; row < col; row++) {
+                x(row) -= A(row, col) * x(col);
+            }
+        }
     }
     return true;
 }
