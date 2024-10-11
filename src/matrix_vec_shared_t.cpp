@@ -121,18 +121,6 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
         int L1N = _norm_N(A_M-1, -1, -1);
         // for (L1 : 0 .. L1N)
 
-//        for (L1 = 0; L1 < L1N; L1++) {
-//            x(j(L1)) = b(j(L1));
-//
-//            // fn. such that i(L2) = i
-//            auto i = _norm_fn_idx(j(L1)+1, 1, A_M);
-//            int L2;
-//            int L2N = _norm_N(0, 1, j(L1));
-//
-//            for (L2 = 0; L2 < L2N; L2++)
-//                x(j(L1)) -= A(j(L1), i) * x(i);
-//            x(j) /= A(j, j);
-//        }
         for (L1 = 0; L1 < L1N; L1++) {
             int view_j_L1 = j(L1);
             T val_b_L1 = b(view_j_L1); // READ
@@ -149,6 +137,42 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
             }
             x(j(L1)) /= A(j(L1), j(L1));
         }
+
+        /**
+        for (L1 = 0; L1 < L1N; L1++) {
+            x(j(L1)) = b(j(L1));
+            for (L2 = 0; L2 < L2N; L2++)
+                x(j(L1)) -= A(j(L1),i(L2)) * x(i(L2));
+            x(j(L1)) /= A(j(L1),j(L1));
+        }
+         */
+
+        /**
+        for (L1 = 0; L1 < L1N; L1++) {
+            x(j(L1)) = b(j(L1));
+            for (L2 = 0; L2 < L2N; L2++)
+                x(j(L1)) -= A(j(L1),i(L2)) * x(i(L2));
+            x(j(L1)) /= A(j(L1),j(L1));
+        }
+         */
+
+        /**
+        for (L1 = j'(n-1); L1 < j'(-1); L1++) {
+            x(j(L1)) = b(j(L1));
+            for (L2 = i'(j(L1)+1); L2 < i'(n); L2++)
+                x(j(L1)) -= A(j(L1),i(L2)) * x(i(L2));
+            x(j(L1)) /= A(j(L1),j(L1));
+        }
+         */
+
+        /**
+        for (j(L1) = n-1; j(L1) > -1; j(L1)--) {
+            x(j(L1)) = b(j(L1));
+            for (i(L2) = j(L1)+1; i(L2) < n; i(L2)++)
+                x(j(L1)) -= A(j(L1),i(L2)) * x(i(L2));
+            x(j(L1)) /= A(j(L1),j(L1));
+        }
+         */
 
         /**
         for (j = n-1; j >= 0; j--) {
