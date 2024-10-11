@@ -115,7 +115,7 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
         auto _norm_fn_idx = [](int begin, int stride, int end){return [begin,stride](int idx){return idx * stride + begin;};};
         auto _norm_N = [](int begin, int stride, int end)->int{return (end - begin + stride) / stride - 1;};
 
-        // fn. such that j(L1) = j = row
+        // fn. such that j(L1) = j = row;   L1 = j'(row)
         auto j = _norm_fn_idx(A_M-1, -1, -1);
         int L1;
         int L1N = _norm_N(A_M-1, -1, -1);
@@ -133,6 +133,22 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
 //                x(j(L1)) -= A(j(L1), i) * x(i);
 //            x(j) /= A(j, j);
 //        }
+        for (L1 = 0; L1 < L1N; L1++) {
+            int view_j_L1 = j(L1);
+            T val_b_L1 = b(view_j_L1); // READ
+            x(j(L1)) = val_b_L1; // WRITE
+
+            // fn. such that i(L2) = i = col; L2 = i'(col)
+            auto i = _norm_fn_idx(j(L1)+1, 1, A_M);
+            int L2;
+            int L2N = _norm_N(j(L1)+1, 1, A_M);
+
+            for (L2 = 0; L2 < L2N; L2++) {
+                int view_i_L2 = i(L2);
+                x(j(L1)) -= A(j(L1), i(L2)) * x(view_i_L2);
+            }
+            x(j(L1)) /= A(j(L1), j(L1));
+        }
 
         /**
         for (j = n-1; j >= 0; j--) {
