@@ -11,6 +11,9 @@ documents
 include
 lib
 
+# Benchmark files
+benchmark_results.txt
+
 ### C++ ###
 # Prerequisites
 *.d
