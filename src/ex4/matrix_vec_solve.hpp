@@ -1,12 +1,12 @@
-#ifndef INC_3_MATRIX_VEC_SHARED_T_HPP
-#define INC_3_MATRIX_VEC_SHARED_T_HPP
+#ifndef INC_3_MATRIX_VEC_SOLVE_HPP
+#define INC_3_MATRIX_VEC_SOLVE_HPP
 
 #ifndef matrix_t_hpp
-#include "matrix_t.hpp"
+#include "../matrix_t.hpp"
 #endif
 
 #ifndef vec_t_hpp
-#include "vec_t.hpp"
+#include "../vec_t.hpp"
 #endif
 
 #if defined(matrix_t_hpp) && defined(vec_t_hpp)
@@ -23,4 +23,4 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b);
 
 #endif //defined(matrix_t_hpp) && defined(vec_t_hpp)
 
-#endif //INC_3_MATRIX_VEC_SHARED_T_HPP
+#endif //INC_3_MATRIX_VEC_SOLVE_HPP

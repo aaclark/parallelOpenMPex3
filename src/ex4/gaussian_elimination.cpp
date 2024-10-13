@@ -5,7 +5,9 @@
 
 #include <random>
 
-#include "matrix_t.cpp"
+#include "matrix_vec_solve.cpp"
+#include "../matrix_t.cpp"
+#include "../vec_t.cpp"
 
 
 // Do we have our types?
@@ -52,12 +54,23 @@ int main(int argc, char* argv[]) {
      * SETUP HERE
      */
 
-    matrix<double_t> a,b,c;
-    a.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
-    b.resize(size_N, uniform_double(engine)).diagonal(uniform_double(engine));
-    a(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
-    b(uniform_selection(engine),uniform_selection(engine))=uniform_double(engine);
+    matrix<double_t> A; // Declare
+    vec<double_t> b, x, y;    // Declare
+    //uniform_double(engine)
+    A.resize(3);
+    //.upper(2.0);     // Modify: set upper triangle to V
+    b.resize(A.size());
 
+    A(0,0) = 2.0;   A(0,1) =-3.0;
+                            A(1,1) = 1.0;   A(1,2) = 1.0;
+                                                    A(2,2) = -5.0;
+
+    b(0) = 3.0;
+    b(1) = 1.0;
+    b(2) = 0.0;
+
+    std::cout<<"A="<<std::endl;A.show(); std::cout << std::endl << std::endl;
+    std::cout<<"b="<<std::endl;b.show(); std::cout << std::endl << std::endl;
 
     // Start the clock!
     auto t1 = high_resolution_clock::now();
@@ -65,19 +78,32 @@ int main(int argc, char* argv[]) {
     /**
      * DO TIMED STUFF HERE
      */
-    c = (a*b);
+
+    // Ax = b
+    solve_c(A, x, b);
+    //x.show(); std::cout << std::endl << std::endl;
 
     // Stop the clock!
     auto t2 = high_resolution_clock::now();
-    duration<double, std::milli> ms_double = t2 - t1;
+    duration<double, std::milli> ms_double_c = t2 - t1;
 
-    //c.show(); std::cout << std::endl << std::endl;
+    /**
+     * DO TIMED STUFF HERE
+     */
+
+    // Ax = b
+    solve_r(A, y, b);
+
+    // Stop the clock!
+    auto t3 = high_resolution_clock::now();
+    duration<double, std::milli> ms_double_r = t3 - t2;
 
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
     << "N="         << std::setw(8) << std::setprecision(4) << size_N
-//    << "Threads="   << std::setw(8) << std::setprecision(4) << c.
-    << "dt="        << std::setw(8) << std::setprecision(4) << ms_double.count() << "ms"
+    //<< "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
+    << "solve_c="        << std::setw(8) << std::setprecision(4) << ms_double_c.count() << "ms "
+    << "solve_r="        << std::setw(8) << std::setprecision(4) << ms_double_r.count() << "ms "
     << std::endl;
 
     return EXIT_SUCCESS;
