@@ -51,15 +51,15 @@ public:
         matrix<T> c; // NxN matrix = {v ... v}
         c.resize(N);
 
-        int i, j, k;
+//        int i, j, k;
         // TODO FIX: ‘this’ allowed in OpenMP only in ‘declare simd’ clauses
-#pragma omp parallel default(none) private(i,j,k) shared(this->values, other, c)
+//#pragma omp parallel default(none) private(i,j,k) shared(this->values, other, c)
         {
-#pragma omp for schedule(static)
-            for (i = 0; i < N; i++) {
-                for (j = 0; j < N; j++) {
+#pragma omp parallel for default(none) shared(c, other) schedule(static) collapse(1)
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
                     c(i, j) = 0;
-                    for (k = 0; k < N; k++) {
+                    for (int k = 0; k < N; k++) {
                         c(i, j) += (T)(*this)(i, k) * other(k, j);
                     }
                 }
