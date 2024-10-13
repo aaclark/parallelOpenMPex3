@@ -1,4 +1,53 @@
+#include "omp.h"
 #include "matrix_vec_shared_t.hpp"
+#include <iostream>
+
+template <typename T>
+bool solve_v2_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
+    int A_M = A.size(); // A_M = width(M)
+    int b_N = b.size(); // b_N = |b|
+   
+    if (b_N != A_M)
+        return false;
+    int row, col;
+    x.resize(A_M); // such that |x| = |b| and |x| = width(M)
+    int n = b_N;
+    for (row = 0; row < n; row++)
+      x(row) = b(row);
+    for (col = n-1; col >= 0; col--) {
+      x(col) /= A(col, col);
+      #pragma omp parallel for default(none) shared(x, A) firstprivate(col) private(row)
+      for (row = 0; row < col; row++){
+	#pragma omp atomic
+	x(row) -= A(row, col) * x(col);
+      }
+    }
+   
+    return true;
+}
+
+template <typename T>
+bool solve_v2_r(matrix<T>& A, vec<T>& x, vec<T>& b) {
+    int A_M = A.size(); // A_M = width(M)
+    int b_N = b.size(); // b_N = |b|
+ 
+    if (b_N != A_M)
+        return false;
+    int row, col;
+    x.resize(A_M); // such that |x| = |b| and |x| = width(M)
+    int n = b_N;
+    for (row = n-1; row >= 0; row--) {
+      x(row) = b(row);
+      double col_sum=0.0;
+#pragma omp parallel for default(none) shared(x, A, n) firstprivate(row) private(col) reduction(+:col_sum)
+      for (col = row+1; col < n; col++)
+	col_sum += A(row, col) * x(col);
+      x(row)-=col_sum;
+      x(row) /= A(row, row);
+    }
+
+    return true;
+}
 
 template <typename T>
 bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
@@ -10,7 +59,7 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
     x.resize(A_M); // such that |x| = |b| and |x| = width(M)
 //#pragma omp parallel default(none) private(b_N,A_M,row,col) shared(A,x,b) num_threads(8)
     {
-
+      
         /**
          * Loop Analysis:
          * In general it is always possible to normalize a loop specification from:
@@ -34,7 +83,6 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         for (row = 0; row < A_M; row++) {
             x(row) = b(row);
         }
-
         // fn. such that j(L1) = j = col
         auto j = _norm_fn_idx(A_M-1, -1, -1);
         int L1;
@@ -52,8 +100,8 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
             auto i = _norm_fn_idx(0, 1, j(L1));
             int L2;
             int L2N = _norm_N(0, 1, j(L1)); // L2N = {0 .. L1-1}
-            for (L2 = 0; L2 < L2N; L2++) {
-                row = i(L2);
+	     for (L2 = 0; L2 < L2N; L2++) {
+	         row = i(L2);
                 T val_x_L2 = x(row); // READ
                 T val_A_L2_L1 = (A(row, col)); // READ
                 T val_x_L1_shadow = x(col); // READ SHADOWS OUTER

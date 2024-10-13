@@ -49,8 +49,8 @@ int main(int argc, char* argv[]) {
     std::uniform_real_distribution<double_t> uniform_double(-10, 10);
     std::uniform_int_distribution<int> uniform_selection(0, size_N - 1);
 
-
-
+    
+    
     /**
      * SETUP HERE
      */
@@ -58,21 +58,30 @@ int main(int argc, char* argv[]) {
     matrix<double_t> A; // Declare
     vec<double_t> b, x, y;    // Declare
     //uniform_double(engine)
-    A.resize(3);
-    //.upper(2.0);     // Modify: set upper triangle to V
+    A.resize(size_N);
+    A.fill(0).upper(2.0);     // Modify: set upper triangle to V
     b.resize(A.size());
 
-    A(0,0) = 2.0;   A(0,1) =-3.0;
+    for(int row=0;row<size_N;row++){
+      b(row)=row*3.0+1.0;
+      for(int col=0;col<size_N;col++){
+	if (col>=row)
+	  A(row,col)=(row+col+1)*2;
+	else
+	  A(row,col)=0.0;
+      }
+    }
+    /*A(0,0) = 2.0;   A(0,1) =-3.0;
                             A(1,1) = 1.0;   A(1,2) = 1.0;
                                                     A(2,2) = -5.0;
 
     b(0) = 3.0;
     b(1) = 1.0;
-    b(2) = 0.0;
+    b(2) = 0.0;*/
 
     std::cout<<"A="<<std::endl;A.show(); std::cout << std::endl << std::endl;
     std::cout<<"b="<<std::endl;b.show(); std::cout << std::endl << std::endl;
-
+    
     // Start the clock!
     auto t1 = high_resolution_clock::now();
 
@@ -81,7 +90,8 @@ int main(int argc, char* argv[]) {
      */
 
     // Ax = b
-    solve_c(A, x, b);
+    //solve_v2_c(A, x, b);
+    solve_v2_r(A, x, b);
     //x.show(); std::cout << std::endl << std::endl;
 
     // Stop the clock!

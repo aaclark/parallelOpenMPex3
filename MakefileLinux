@@ -1,0 +1,38 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -std=c++11 -g -Wall -Wextra -pthread
+
+# Source files
+SRCS = src/matrix_vec_shared_t.cpp src/vec_t.cpp src/matrix_t.cpp src/gaussian_elimination.cpp #src/matrix_multiply.cpp
+OBJS = $(SRCS:.cpp=.o)
+
+# Detect OS
+UNAME_S := $(shell uname -s)
+
+# Linux specific settings
+ifeq ($(UNAME_S), Linux)
+    CXXFLAGS += -fopenmp -fsanitize=thread -fno-omit-frame-pointer
+    LDFLAGS += -fopenmp -fsanitize=thread  # Ensure ThreadSanitizer is used during linking
+endif
+
+# macOS specific settings
+ifeq ($(UNAME_S), Darwin)
+    CXXFLAGS += -I/opt/libomp/include
+    LDFLAGS += -L/opt/libomp/lib -fopenmp
+endif
+
+# Target executable
+TARGET = gaussian_elemination
+
+# Default target
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CXX) $(OBJS) -o $(TARGET) $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean
+clean:
+	rm -f $(OBJS) $(TARGET)
