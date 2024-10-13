@@ -4,13 +4,16 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -lm -fopenmp
+CFLAGS = -fopenmp -O3 -Wextra
+
+# Adding additional flags from the command line or the Makefile
+CFLAGS += $(OUTPUT_FLAG)
 
 # Target executable
-TARGET = seives
+TARGET = Game_Of_Life
 
 # Source files
-SRC = seives.c
+SRC = Game_Of_Life.c
 
 # Default target
 all: $(TARGET)
@@ -26,8 +29,9 @@ clean:
 # Run target with arguments
 run: $(TARGET)
 	@echo "Running $(TARGET) with arguments:"
-	@read -p "Enter max: " max; \
-	read -p "Enter threads: " threads; \
-	./$(TARGET) $$max $$threads
+	@read -p "Enter ArraySize: " arraysize; \
+        read -p "Enter TimeSteps: " timesteps; \
+	read -p "Enter Threads: " threads; \
+	./$(TARGET) $$arraysize $$timesteps $$threads
 
 .PHONY: all clean run
