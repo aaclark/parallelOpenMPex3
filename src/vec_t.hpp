@@ -23,7 +23,7 @@ public:
     void show() {
 //        std::cout << "[ ";
         for (int i = 0; i < M; i++) {
-            std::cout << std::left << std::setfill(' ') << std::setw(8) << std::setprecision(4) << (*this)(i);
+            std::cout << std::left << std::setfill(' ') << std::setw(12) << std::setprecision(4) << (*this)(i);
         }
 //        std::cout << " ]";
         std::cout << std::endl;
