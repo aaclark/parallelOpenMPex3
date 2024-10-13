@@ -98,10 +98,6 @@ int main(int argc, char* argv[]) {
     auto t3 = high_resolution_clock::now();
     duration<double, std::milli> ms_double_r = t3 - t2;
 
-    std::cout<<"x="<<std::endl; x.show(); std::cout << std::endl << std::endl;
-
-    std::cout<<"y="<<std::endl; y.show(); std::cout << std::endl << std::endl;
-
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
     << "N="         << std::setw(8) << std::setprecision(4) << size_N
