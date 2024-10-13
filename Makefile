@@ -21,9 +21,9 @@ OPENMP ?= 1
 ########
 ifeq ($(OPENMP),1)
 UNAME_S	= $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-	CPPFLAGS +=	-I"/opt/libomp/include"
-endif
+#ifeq ($(UNAME_S),Linux)
+#	CPPFLAGS +=	-I"/opt/libomp/include"
+#endif
 ifeq ($(UNAME_S),Darwin) # Workaround for OSX
 	CPPFLAGS += -Xpreprocessor -fopenmp -lomp -I"$(shell brew --prefix libomp)/include"
 endif
@@ -63,8 +63,9 @@ endif
 ########
 ifeq ($(OPENMP),1)
 UNAME_S	= $(shell uname -s)
+# no such directory
 ifeq ($(UNAME_S),Linux)
-LDFLAGS   +=  -L"/opt/libomp/lib"
+LDFLAGS   +=  -fopenmp #-L"/opt/libomp/lib"
 endif
 ifeq ($(UNAME_S),Darwin) # Workaround for OSX
 LDFLAGS   +=  -L"$(shell brew --prefix libomp)/lib"

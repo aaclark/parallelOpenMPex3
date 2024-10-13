@@ -1,4 +1,4 @@
-#include "omp.h"
+#include <omp.h>
 #include "matrix_vec_shared_t.hpp"
 #include <iostream>
 

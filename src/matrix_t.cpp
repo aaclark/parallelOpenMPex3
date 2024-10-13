@@ -1,7 +1,7 @@
 #include <vector>
 //#include <thread>
 //#include <pthread.h>
-//#include <omp.h>
+#include <omp.h>
 
 #include "matrix_t.hpp"
 

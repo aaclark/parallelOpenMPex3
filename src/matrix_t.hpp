@@ -8,7 +8,7 @@
 #include <cstdio>
 #include <iostream>
 #include <iomanip>
-
+#include <omp.h>
 #define DEBUG true
 
 template <typename T>
