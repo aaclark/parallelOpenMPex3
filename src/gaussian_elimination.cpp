@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
      */
 
     matrix<double_t> A; // Declare
-    vec<double_t> b, x;    // Declare
+    vec<double_t> b, x, y;    // Declare
     //uniform_double(engine)
     A.resize(size_N)
     .upper(2.0);     // Modify: set upper triangle to V
@@ -73,7 +73,6 @@ int main(int argc, char* argv[]) {
 
     // Ax = b
     solve_c(A, x, b);
-    //x.show(); std::cout << std::endl << std::endl;
 
     // Stop the clock!
     auto t2 = high_resolution_clock::now();
@@ -84,19 +83,21 @@ int main(int argc, char* argv[]) {
      */
 
     // Ax = b
-    solve_r(A, x, b);
-    //x.show(); std::cout << std::endl << std::endl;
+    solve_r(A, y, b);
 
     // Stop the clock!
     auto t3 = high_resolution_clock::now();
     duration<double, std::milli> ms_double_r = t3 - t2;
 
+    std::cout << "Ax=b; x="; x.show(); std::cout << std::endl << std::endl;
+    std::cout << "Ay=b; y="; y.show(); std::cout << std::endl << std::endl;
+
     // Print results and net runtime of running <STUFF>
-    std::cout << std::left<< std::setfill(' ')
-    << "N="         << std::setw(8) << std::setprecision(4) << size_N
+    std::cout << std::right<< std::setfill(' ')
+    << "N= "         << std::setw(8) << std::setprecision(4) << size_N
     //<< "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
-    << "solve_c="        << std::setw(8) << std::setprecision(4) << ms_double_c.count() << "ms "
-    << "solve_r="        << std::setw(8) << std::setprecision(4) << ms_double_r.count() << "ms "
+    << " solve_c= "        << std::setw(6) << std::setprecision(4) << ms_double_c.count() << " ms "
+    << " solve_r= "        << std::setw(6) << std::setprecision(4) << ms_double_r.count() << " ms "
     << std::endl;
 
     return EXIT_SUCCESS;
