@@ -8,10 +8,10 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         return false;
     int row, col;
     x.resize(A_M); // such that |x| = |b| and |x| = width(M)
-//#pragma omp parallel default(none) private(b_N,A_M,row,col) shared(A,x,b) num_threads(8)
 
     access_pattern x_access;
 
+//#pragma omp parallel default(none) private(b_N,A_M,row,col) shared(A,x,b,x_access)
     {
 
         /**
@@ -35,9 +35,11 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
 //#pragma omp for schedule(static)
         // Non-loop-carried
         for (row = 0; row < A_M; row++) {
-            x(row) = b(row);
             T val_b_row = b(row); // READ
+//            std::cout << "b(R" << row << ") <-";
             x(row) = val_b_row; // WRITE
+//            x_access.update(W,row);
+//            std::cout << "x(W" << row << ") <-";
         }
 
         // fn. such that j(L1) = j = col
