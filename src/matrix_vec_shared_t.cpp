@@ -9,6 +9,9 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
     int row, col;
     x.resize(A_M); // such that |x| = |b| and |x| = width(M)
 //#pragma omp parallel default(none) private(b_N,A_M,row,col) shared(A,x,b) num_threads(8)
+
+    access_pattern x_access;
+
     {
 
         /**
@@ -33,6 +36,8 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         // Non-loop-carried
         for (row = 0; row < A_M; row++) {
             x(row) = b(row);
+            T val_b_row = b(row); // READ
+            x(row) = val_b_row; // WRITE
         }
 
         // fn. such that j(L1) = j = col
@@ -44,8 +49,12 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         for (L1 = 0; L1 < L1N; L1++) {
             col = j(L1);
             T val_x_L1 = x(col); // READ
+//            x_access.update(R,col);
+//            std::cout << "x(R" << col << ") <-";
             T val_A_L1_L1 = (A(col, col)); // READ
             x(col) = val_x_L1 / val_A_L1_L1; // WRITE
+//            x_access.update(W,col,col);
+//            std::cout << "x(W" << col << ") <-";
             // x(col) /= A(col, col);
 
             // fn. such that i(L2) = i = row
@@ -55,10 +64,16 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
             for (L2 = 0; L2 < L2N; L2++) {
                 row = i(L2);
                 T val_x_L2 = x(row); // READ
+//                x_access.update(R,row);
+//                std::cout << "x(R" << row << ") <-";
                 T val_A_L2_L1 = (A(row, col)); // READ
                 T val_x_L1_shadow = x(col); // READ SHADOWS OUTER
+//                x_access.update(R,row,col);
+//                std::cout << "x(R" << col << ") <-";
                 T mul_A_L2_L1_val_x_L1 = val_A_L2_L1 * val_x_L1_shadow; // MUL
                 x(row) = val_x_L2 - mul_A_L2_L1_val_x_L1; // WRITE
+//                x_access.update(W,row,col);
+//                std::cout << "x(W" << row << ") <-";
                 // x(row) -= A(row, col) * x(col);
             }
         }
