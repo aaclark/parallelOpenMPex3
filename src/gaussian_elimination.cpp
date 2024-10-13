@@ -9,7 +9,6 @@
 #include "matrix_t.cpp"
 #include "vec_t.cpp"
 
-#include "omp.h"
 
 // Do we have our types?
 #ifndef double_t /*implementation defined*/
