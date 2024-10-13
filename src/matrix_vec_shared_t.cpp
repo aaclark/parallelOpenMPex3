@@ -104,6 +104,8 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         */
 
     }
+    print_access_pattern(&x_access);
+
     return true;
 }
 
