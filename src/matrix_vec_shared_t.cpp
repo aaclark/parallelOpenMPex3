@@ -8,12 +8,6 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         return false;
     int row, col;
     x.resize(N);
-//#pragma omp parallel default(none) private(M,N,row,col) shared(A,x,b) num_threads(8)
-    {
-//#pragma omp for schedule(static)
-        for (row = 0; row < N; row++) {
-            x(row) = b(row);
-        }
         for (col = N - 1; col >= 0; col--) {
             x(col) /= A(col, col);
             for (row = 0; row < col; row++) {
@@ -21,6 +15,14 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
             }
         }
     }
+
+    x = b; // b is never written; use implicit vec<T>(vec<T>) constructor instead
+
+//#pragma omp parallel for default(none)  shared(x, b, N)
+//        for (int row = 0; row < N; row++) {
+//            x(row) = b(row);
+//        }
+
     return true;
 }
 
