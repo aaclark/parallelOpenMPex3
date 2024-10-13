@@ -1,5 +1,7 @@
 #include "matrix_vec_shared_t.hpp"
 
+#include "access_pattern.hpp"
+
 template <typename T>
 bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
     int A_M = A.size(); // A_M = width(M)
