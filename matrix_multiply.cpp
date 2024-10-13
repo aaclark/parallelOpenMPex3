@@ -64,7 +64,6 @@ int main(int argc, char* argv[]) {
      * DO TIMED STUFF HERE
      */
     c = (a*b);
-    c(size_N-1,size_N-1) = (double)1.0;
 
     // Stop the clock!
     auto t2 = high_resolution_clock::now();
@@ -73,7 +72,7 @@ int main(int argc, char* argv[]) {
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
     << "N="         << std::setw(8) << std::setprecision(4) << size_N
-    << "Threads="   << std::setw(8) << std::setprecision(4) << c.thr
+//    << "Threads="   << std::setw(8) << std::setprecision(4) << c.
     << "dt="        << std::setw(8) << std::setprecision(4) << ms_double.count() << "ms"
     << std::endl;
 
