@@ -1,4 +1,4 @@
-#include "matrix_vec_shared_t.hpp"
+#include "matrix_vec_solve.hpp"
 
 template <typename T>
 bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
