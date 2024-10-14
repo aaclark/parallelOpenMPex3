@@ -66,18 +66,8 @@ int main(int argc, char* argv[]) {
 
     // Start the clock!
     auto t1 = high_resolution_clock::now();
-    a.collapse_level=1;
-    b.collapse_level=1;
     c = (a*b);
     auto t2 = high_resolution_clock::now();
-    a.collapse_level=2;
-    b.collapse_level=2;
-    c = (a*b);
-    auto t3 = high_resolution_clock::now();
-    a.collapse_level=3;
-    b.collapse_level=3;
-    c = (a*b);
-    auto t4 = high_resolution_clock::now();
 
     duration<double, std::milli> ms_double = t2 - t1;
 
@@ -88,9 +78,7 @@ int main(int argc, char* argv[]) {
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
     << "N="         << std::setw(12) << std::setprecision(4) << size_N //<< "Threads="   << std::setw(8) << std::setprecision(4) << c.
-            << "dt1="        << std::setw(12) << std::setprecision(4) << (duration<double, std::milli>(t2-t1)).count() << " ms "
-            << "dt2="        << std::setw(12) << std::setprecision(4) << (duration<double, std::milli>(t3-t2)).count() << " ms "
-            << "dt3="        << std::setw(12) << std::setprecision(4) << (duration<double, std::milli>(t4-t3)).count() << " ms "
+            << "dt="        << std::setw(12) << std::setprecision(4) << (duration<double, std::milli>(t2-t1)).count() << " ms "
     << std::endl;
 
     return EXIT_SUCCESS;

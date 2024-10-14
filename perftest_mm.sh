@@ -7,19 +7,20 @@ output_file="benchmark_results.txt"
 #matrix_sizes=$(seq 1 16)
 
 # Number of threads to test
-thread_counts=(1 2 4 8 16 32)
+thread_counts=(1 2 4 8 16)
 
 # Clear the output file before starting the benchmarks
 #echo "" > $output_file
 
 typeset -i N START END
-START=1020
+START=100
 END=2000
 # Run the benchmarks
 for threads in "${thread_counts[@]}"; do
   for ((N=START;N<=END;N+=100)); do
     # Set the number of threads for OpenMP
     export OMP_NUM_THREADS=$threads
+    echo "T=${OMP_NUM_THREADS}, N=${N}"
 
     # Run the matrix_multiply program and capture the output
     result=$(./matrix_multiply $N)

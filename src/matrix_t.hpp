@@ -8,6 +8,8 @@
 
 #define DEBUG true
 
+#define COLLAPSE_LEVEL 1
+
 template <typename T>
 class matrix {
     int N {0};
@@ -69,55 +71,27 @@ public:
         matrix<T> c; // NxN matrix = {v ... v}
         c.resize(N);
 
-        int row, i, j;
+        /**
+         * According to OpenMP:
+         * If execution of any associated loop changes any of the values
+         * used to compute any of the iteration counts, then the behavior
+         * is unspecified.
+         */
+
+//        int row, i, j; //private(row,i,j)
         {
-            /**
-             * According to OpenMP:
-             * If execution of any associated loop changes any of the values
-             * used to compute any of the iteration counts, then the behavior
-             * is unspecified.
-             */
-            switch (collapse_level) {
-                case 1:
-#pragma omp parallel for default(none) private(row,i,j) shared(other, c) schedule(static) \
-collapse(1)
-                    for (row = 0; row < N; row++) { // row
-                        for (i = 0; i < N; i++) {
-                            c(row, i) = 0;
-                            for (j = 0; j < N; j++) {
-                                c(row, i) += (T)(*this)(row, j) * other(j, i);
-                            }
+#pragma omp parallel for default(none) shared(other, c) schedule(static) collapse(COLLAPSE_LEVEL)
+                for (int row = 0; row < N; row++) { // row
+                    for (int i = 0; i < N; i++) {
+                        c(row, i) = 0;
+                        for (int j = 0; j < N; j++) {
+                            c(row, i) += (T)(*this)(row, j) * other(j, i);
                         }
                     }
-                    break;
-                case 2:
-#pragma omp parallel for default(none) private(row,i,j) shared(other, c) schedule(static) \
-collapse(2)
-                    for (row = 0; row < N; row++) { // row
-                        for (i = 0; i < N; i++) {
-                            c(row, i) = 0;
-                            for (j = 0; j < N; j++) {
-                                c(row, i) += (T)(*this)(row, j) * other(j, i);
-                            }
-                        }
-                    }
-                    break;
-                case 3:
-#pragma omp parallel for default(none) private(row,i,j) shared(other, c) schedule(static) \
-collapse(3)
-                    for (row = 0; row < N; row++) { // row
-                        for (i = 0; i < N; i++) {
-                            c(row, i) = 0;
-                            for (j = 0; j < N; j++) {
-                                c(row, i) += (T)(*this)(row, j) * other(j, i);
-                            }
-                        }
-                    }
-                    break;
+                }
+
 
             }
-
-        }
 
         return c;
     }
