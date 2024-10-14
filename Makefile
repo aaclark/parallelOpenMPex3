@@ -71,9 +71,6 @@ ifeq ($(DEBUG),1)
 else
  CXXFLAGS +=	-O3
 endif
-ifeq ($(OPENMP),1)
-CXXFLAGS  +=  -pthread -fsanitize=thread -fno-omit-frame-pointer
-endif
 
 
 ########
