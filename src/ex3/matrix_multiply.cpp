@@ -23,6 +23,11 @@ void usage(char* argv[]) {
 
 int main(int argc, char* argv[]) {
 
+#if not defined(_OPENMP)
+    std::cerr << "NOT COMPILED WITH OPENMP!" << std::endl;
+    std::exit(EXIT_FAILURE)
+#endif
+
     if((argc < 2)||!strcmp(argv[1],"-h")) {
         usage(argv);
     }
@@ -61,14 +66,9 @@ int main(int argc, char* argv[]) {
 
     // Start the clock!
     auto t1 = high_resolution_clock::now();
-
-    /**
-     * DO TIMED STUFF HERE
-     */
     c = (a*b);
-
-    // Stop the clock!
     auto t2 = high_resolution_clock::now();
+
     duration<double, std::milli> ms_double = t2 - t1;
 
     c(0,0) = 0;
@@ -77,9 +77,8 @@ int main(int argc, char* argv[]) {
 
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
-    << "N="         << std::setw(8) << std::setprecision(4) << size_N
-//    << "Threads="   << std::setw(8) << std::setprecision(4) << c.
-    << "dt="        << std::setw(8) << std::setprecision(4) << ms_double.count() << "ms"
+    << "N="         << std::setw(12) << std::setprecision(4) << size_N //<< "Threads="   << std::setw(8) << std::setprecision(4) << c.
+            << "dt="        << std::setw(12) << std::setprecision(4) << (duration<double, std::milli>(t2-t1)).count() << " ms "
     << std::endl;
 
     return EXIT_SUCCESS;
