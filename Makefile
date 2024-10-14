@@ -55,9 +55,6 @@ endif
 CXX				=		$(TOOLCHAIN)
 CC				=		$(CXX)	# Hack to force make to use clan/g++ (instead of cc)
 CXXFLAGS		+=		-std=c++11
-ifeq ($(OPENMP),1)
-CXXFLAGS  += -fopenmp
-endif
 # debug flags
 ifeq ($(DEBUG),1)
  CXXFLAGS +=	-v
