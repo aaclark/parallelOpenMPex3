@@ -54,7 +54,7 @@ else
 CXXFLAGS	+=	-O3
 endif
 ifeq ($(OPENMP),1)
-CXXFLAGS  +=  -pthread -fsanitize=thread -fno-omit-frame-pointer
+#CXXFLAGS  +=  -pthread #-fsanitize=thread -fno-omit-frame-pointer
 endif
 
 
@@ -70,7 +70,7 @@ ifeq ($(UNAME_S),Darwin) # Workaround for OSX
 LDFLAGS   +=  -L"$(shell brew --prefix libomp)/lib"
 LDFLAGS   +=  -lomp # for some reason "-lomp" is required here
 endif
-LDFLAGS  +=  -pthread -fsanitize=thread -fno-omit-frame-pointer
+#LDFLAGS  +=  -pthread -fsanitize=thread -fno-omit-frame-pointer
 endif
 # Local dylib if necessary
 LDFLAGS   +=  -L"$(shell realpath ./lib)"
@@ -95,7 +95,7 @@ clean:
 	@echo "Cleanup complete!"
 
 
-.PHONEY: depend
+.PHONY: depend
 depend: $(SRCS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -c -MMD $^
 	@sed -i'~' "s|^\(.*\)\.o: \(.*\)\1|\2\1.o: \2\1|g" $(DEPS)

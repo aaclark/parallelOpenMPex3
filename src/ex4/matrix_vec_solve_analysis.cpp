@@ -1,4 +1,4 @@
-#include "matrix_vec_shared_t.hpp"
+#include "matrix_vec_solve.hpp"
 
 template <typename T>
 bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
@@ -28,7 +28,7 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         auto _norm_fn_idx = [](int begin, int stride, int end){return [begin,stride](int idx){return idx * stride + begin;};};
         auto _norm_N = [](int begin, int stride, int end)->int{return (end - begin + stride) / stride - 1;};
         //auto INDEX_NORM = [](int l, int s, int i){return i*s+l;};
-        
+
 //#pragma omp for schedule(static)
         // Non-loop-carried
         for (row = 0; row < A_M; row++) {
