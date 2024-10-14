@@ -43,9 +43,9 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
 
         for (L1 = 0; L1 < L1N; L1++) {
             col = j(L1);
-            T val_x_L1 = x(col); // READ
-            T val_A_L1_L1 = (A(col, col)); // READ
-            x(col) = val_x_L1 / val_A_L1_L1; // WRITE
+            T val_x_L1 = x(j(L1)); // READ
+            T val_A_L1_L1 = (A(j(L1), j(L1))); // READ
+            x(j(L1)) = val_x_L1 / val_A_L1_L1; // WRITE
             // x(col) /= A(col, col);
 
             // fn. such that i(L2) = i = row
@@ -54,11 +54,11 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
             int L2N = _norm_N(0, 1, j(L1)); // L2N = {0 .. L1-1}
             for (L2 = 0; L2 < L2N; L2++) {
                 row = i(L2);
-                T val_x_L2 = x(row); // READ
-                T val_A_L2_L1 = (A(row, col)); // READ
+                T val_x_L2 = x(i(L2)); // READ
+                T val_A_L2_L1 = (A(i(L2), col)); // READ
                 T val_x_L1_shadow = x(col); // READ SHADOWS OUTER
                 T mul_A_L2_L1_val_x_L1 = val_A_L2_L1 * val_x_L1_shadow; // MUL
-                x(row) = val_x_L2 - mul_A_L2_L1_val_x_L1; // WRITE
+                x(i(L2)) = val_x_L2 - mul_A_L2_L1_val_x_L1; // WRITE
                 // x(row) -= A(row, col) * x(col);
             }
         }
@@ -122,8 +122,8 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
         // for (L1 : 0 .. L1N)
 
         for (L1 = 0; L1 < L1N; L1++) {
-            int view_j_L1 = j(L1);
-            T val_b_L1 = b(view_j_L1); // READ
+            row = j(L1);
+            T val_b_L1 = b(j(L1)); // READ
             x(j(L1)) = val_b_L1; // WRITE
 
             // fn. such that i(L2) = i = col; L2 = i'(col)
@@ -132,8 +132,8 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
             int L2N = _norm_N(j(L1)+1, 1, A_M);
 
             for (L2 = 0; L2 < L2N; L2++) {
-                int view_i_L2 = i(L2);
-                x(j(L1)) -= A(j(L1), i(L2)) * x(view_i_L2);
+                col = i(L2);
+                x(j(L1)) -= A(j(L1), i(L2)) * x(i(L2));
             }
             x(j(L1)) /= A(j(L1), j(L1));
         }
