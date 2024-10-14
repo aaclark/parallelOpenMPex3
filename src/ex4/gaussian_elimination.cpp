@@ -87,8 +87,8 @@ int main(int argc, char* argv[]) {
     duration<double, std::milli> ms_double_c = c_t2 - c_t1;
     duration<double, std::milli> ms_double_r = r_t2 - r_t1;
 
-    std::cout << "x = "; x.show(); std::cout << std::endl << std::endl;
-    std::cout << "y = "; y.show(); std::cout << std::endl << std::endl;
+//    std::cout << "x = "; x.show(); std::cout << std::endl << std::endl;
+//    std::cout << "y = "; y.show(); std::cout << std::endl << std::endl;
 
     // Print results and net runtime of running <STUFF>
     std::cout << std::left<< std::setfill(' ')
