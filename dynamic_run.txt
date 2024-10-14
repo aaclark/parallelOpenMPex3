@@ -1,0 +1,12 @@
+Start R.
+Start C.
+ N= 21000        solve_c= 4281         ms  solve_r= 588.5        ms 
+Start R.
+Start C.
+ N= 42000        solve_c= 1.748e+04    ms  solve_r= 1442         ms 
+Start R.
+Start C.
+ N= 21000        solve_c= 8144         ms  solve_r= 296          ms 
+Start R.
+Start C.
+ N= 42000        solve_c= 3.461e+04    ms  solve_r= 1056         ms 

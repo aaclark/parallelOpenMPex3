@@ -1,0 +1,866 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Start R.
+Start C.
+ N= 100          solve_c= 0.4944       ms  solve_r= 0.498        ms 
+Start R.
+Start C.
+ N= 200          solve_c= 2.265        ms  solve_r= 1.369        ms 
+Start R.
+Start C.
+ N= 300          solve_c= 5.856        ms  solve_r= 2.802        ms 
+Start R.
+Start C.
+ N= 400          solve_c= 11.88        ms  solve_r= 4.676        ms 
+Start R.
+Start C.
+ N= 500          solve_c= 20.62        ms  solve_r= 7.005        ms 
+Start R.
+Start C.
+ N= 600          solve_c= 29.26        ms  solve_r= 9.847        ms 
+Start R.
+Start C.
+ N= 700          solve_c= 39.62        ms  solve_r= 13.28        ms 
+Start R.
+Start C.
+ N= 800          solve_c= 52.16        ms  solve_r= 17.04        ms 
+Start R.
+Start C.
+ N= 900          solve_c= 65.65        ms  solve_r= 21.49        ms 
+Start R.
+Start C.
+ N= 1000         solve_c= 84.16        ms  solve_r= 26.14        ms 
+Start R.
+Start C.
+ N= 1100         solve_c= 104.9        ms  solve_r= 30.96        ms 
+Start R.
+Start C.
+ N= 1200         solve_c= 132.4        ms  solve_r= 34.84        ms 
+Start R.
+Start C.
+ N= 1300         solve_c= 164.7        ms  solve_r= 39           ms 
+Start R.
+Start C.
+ N= 1400         solve_c= 201.7        ms  solve_r= 42.9         ms 
+Start R.
+Start C.
+ N= 1500         solve_c= 240.4        ms  solve_r= 46.07        ms 
+Start R.
+Start C.
+ N= 1600         solve_c= 287.4        ms  solve_r= 49.87        ms 
+Start R.
+Start C.
+ N= 1700         solve_c= 339          ms  solve_r= 52.95        ms 
+Start R.
+Start C.
+ N= 1800         solve_c= 392          ms  solve_r= 58.45        ms 
+Start R.
+Start C.
+ N= 1900         solve_c= 448.1        ms  solve_r= 61.99        ms 
+Start R.
+Start C.
+ N= 2000         solve_c= 509.1        ms  solve_r= 67.08        ms 
+Start R.
+Start C.
+ N= 2100         solve_c= 574.2        ms  solve_r= 73.28        ms 
+Start R.
+Start C.
+ N= 2200         solve_c= 640.8        ms  solve_r= 78.92        ms 
+Start R.
+Start C.
+ N= 2300         solve_c= 714.6        ms  solve_r= 85.91        ms 
+Start R.
+Start C.
+ N= 2400         solve_c= 789.7        ms  solve_r= 92.91        ms 
+Start R.
+Start C.
+ N= 2500         solve_c= 866.3        ms  solve_r= 101          ms 
+Start R.
+Start C.
+ N= 2600         solve_c= 945.1        ms  solve_r= 107.7        ms 
+Start R.
+Start C.
+ N= 2700         solve_c= 1037         ms  solve_r= 117.3        ms 
+Start R.
+Start C.
+ N= 2800         solve_c= 1127         ms  solve_r= 126.1        ms 
+Start R.
+Start C.
+ N= 2900         solve_c= 1223         ms  solve_r= 135.8        ms 
+Start R.
+Start C.
+ N= 3000         solve_c= 1316         ms  solve_r= 143.5        ms 
+Start R.
+Start C.
+ N= 3100         solve_c= 1421         ms  solve_r= 154.2        ms 
+Start R.
+Start C.
+ N= 3200         solve_c= 1580         ms  solve_r= 164.7        ms 
+Start R.
+Start C.
+ N= 3300         solve_c= 1637         ms  solve_r= 174.3        ms 
+Start R.
+Start C.
+ N= 3400         solve_c= 1749         ms  solve_r= 185.4        ms 
+Start R.
+Start C.
+ N= 3500         solve_c= 1868         ms  solve_r= 196.5        ms 
+Start R.
+Start C.
+ N= 3600         solve_c= 1988         ms  solve_r= 206.2        ms 
+Start R.
+Start C.
+ N= 10000        solve_c= 1.805e+04    ms  solve_r= 1595         ms 
+Start R.
+Start C.
+ N= 11000        solve_c= 2.207e+04    ms  solve_r= 1924         ms 
+Start R.
+Start C.
+ N= 20000        solve_c= 3.609e+04    ms  solve_r= 3.397e+04    ms 
+Start R.
+Start C.
+ N= 26000        solve_c= 6.316e+04    ms  solve_r= 5.323e+04    ms 
+Start R.
+Start C.
+ N= 32000        solve_c= 9.564e+04    ms  solve_r= 8.667e+04    ms 
+Start R.
+Start C.
+ N= 38000        solve_c= 1.3e+05      ms  solve_r= 1.148e+05    ms 
+Start R.
+Start C.
+ N= 20000        solve_c= 4.654e+04    ms  solve_r= 3.713e+04    ms 
+Start R.
+Start C.
+ N= 21000        solve_c= 3.98e+04     ms  solve_r= 3.712e+04    ms 
+Start R.
+Start C.
+ N= 22000        solve_c= 4.555e+04    ms  solve_r= 4.74e+04     ms 
+Start R.
+Start C.
+ N= 23000        solve_c= 4.785e+04    ms  solve_r= 4.312e+04    ms 
+Start R.
+Start C.
+ N= 24000        solve_c= 5.198e+04    ms  solve_r= 4.617e+04    ms 
+Start R.
+Start C.
+ N= 25000        solve_c= 5.854e+04    ms  solve_r= 4.997e+04    ms 
+Start R.
+Start C.
+ N= 26000        solve_c= 6.09e+04     ms  solve_r= 5.776e+04    ms 
+Start R.
+Start C.
+ N= 27000        solve_c= 6.555e+04    ms  solve_r= 5.988e+04    ms 
+Start R.
+Start C.
+ N= 28000        solve_c= 7.064e+04    ms  solve_r= 6.475e+04    ms 
+Start R.
+Start C.
+ N= 29000        solve_c= 7.575e+04    ms  solve_r= 7.236e+04    ms 
+Start R.
+Start C.
+ N= 30000        solve_c= 8.38e+04     ms  solve_r= 7.157e+04    ms 
+Start R.
+Start C.
+ N= 31000        solve_c= 8.959e+04    ms  solve_r= 7.891e+04    ms 
+Start R.
+Start C.
+ N= 32000        solve_c= 9.621e+04    ms  solve_r= 8.378e+04    ms 
+Start R.
+Start C.
+ N= 33000        solve_c= 9.813e+04    ms  solve_r= 9.271e+04    ms 
+Start R.
+Start C.
+ N= 34000        solve_c= 1.078e+05    ms  solve_r= 9.575e+04    ms 
+Start R.
+Start C.
+ N= 21000        solve_c= 3.994e+04    ms  solve_r= 3.858e+04    ms 
+Start R.
+Start C.
+ N= 42000        solve_c= 1.643e+05    ms  solve_r= 1.416e+05    ms 
+Start R.
+Start C.
+ N= 21000        solve_c= 5.11e+04     ms  solve_r= 3.031e+04    ms 
+Start R.
+Start C.
+ N= 42000        solve_c= 2.029e+05    ms  solve_r= 1.247e+05    ms 
