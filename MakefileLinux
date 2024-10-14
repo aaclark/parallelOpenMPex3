@@ -45,7 +45,7 @@ else
 endif
 
 ifeq ($(OPENMP),1)
-	OPENMP_FLAGS  =		-Xpreprocessor -fopenmp
+	OPENMP_FLAGS  =		-fopenmp
 	OMP_LIBS      = 	-fopenmp
 else
 	OPENMP_FLAGS  =		# No OpenMP
