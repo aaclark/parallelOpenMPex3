@@ -23,6 +23,11 @@ void usage(char* argv[]) {
 
 int main(int argc, char* argv[]) {
 
+#if not defined(_OPENMP)
+    std::err << "NOT COMPILED WITH OPENMP!" << std::endl;
+    std::exit(EXIT_FAILURE)
+#endif
+
     if((argc < 2)||!strcmp(argv[1],"-h")) {
         usage(argv);
     }
