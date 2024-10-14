@@ -69,10 +69,15 @@ public:
         c.resize(N);
 
         int row, i, j;
-        // TODO FIX: ‘this’ allowed in OpenMP only in ‘declare simd’ clauses
-#pragma omp parallel default(none) private(row,i,j) shared(other, c)
         {
-#pragma omp for schedule(static)
+            /**
+             * According to OpenMP:
+             * If execution of any associated loop changes any of the values
+             * used to compute any of the iteration counts, then the behavior
+             * is unspecified.
+             */
+#pragma omp parallel for default(none) private(row,i,j) shared(other, c) \
+            schedule(static) collapse(1)
             for (row = 0; row < N; row++) { // row
                 for (i = 0; i < N; i++) {
                     c(row, i) = 0;
