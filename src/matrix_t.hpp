@@ -17,6 +17,7 @@ class matrix {
         return (values.at(addr(row, i)));
     };
 public:
+    char collapse_level {1};
     int size() {return N;}
     void show() {
         for (int row=0; row < N; row++) { // for each ROW:
@@ -76,16 +77,46 @@ public:
              * used to compute any of the iteration counts, then the behavior
              * is unspecified.
              */
-#pragma omp parallel for default(none) private(row,i,j) shared(other, c) \
-            schedule(static) collapse(1)
-            for (row = 0; row < N; row++) { // row
-                for (i = 0; i < N; i++) {
-                    c(row, i) = 0;
-                    for (j = 0; j < N; j++) {
-                        c(row, i) += (T)(*this)(row, j) * other(j, i);
+            switch (collapse_level) {
+                case 1:
+#pragma omp parallel for default(none) private(row,i,j) shared(other, c) schedule(static) \
+collapse(1)
+                    for (row = 0; row < N; row++) { // row
+                        for (i = 0; i < N; i++) {
+                            c(row, i) = 0;
+                            for (j = 0; j < N; j++) {
+                                c(row, i) += (T)(*this)(row, j) * other(j, i);
+                            }
+                        }
                     }
-                }
+                    break;
+                case 2:
+#pragma omp parallel for default(none) private(row,i,j) shared(other, c) schedule(static) \
+collapse(2)
+                    for (row = 0; row < N; row++) { // row
+                        for (i = 0; i < N; i++) {
+                            c(row, i) = 0;
+                            for (j = 0; j < N; j++) {
+                                c(row, i) += (T)(*this)(row, j) * other(j, i);
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+#pragma omp parallel for default(none) private(row,i,j) shared(other, c) schedule(static) \
+collapse(3)
+                    for (row = 0; row < N; row++) { // row
+                        for (i = 0; i < N; i++) {
+                            c(row, i) = 0;
+                            for (j = 0; j < N; j++) {
+                                c(row, i) += (T)(*this)(row, j) * other(j, i);
+                            }
+                        }
+                    }
+                    break;
+
             }
+
         }
 
         return c;
