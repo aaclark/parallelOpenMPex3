@@ -84,6 +84,18 @@ TARGETS	= 	matrix_multiply gaussian_elimination
 all: depend $(TARGETS)
 
 
+.PHONY: help
+help:
+	@echo "You can build parts of this codebase by running make clean; make depend; make all"
+	@echo "Concatenate the following options to invocations of make ... as needed:"
+	@echo "	[*]	TOOLCHAIN=g++|clang++	"
+	@echo "			enforces using g++ (or clang++) as the compiler"
+	@echo "	[*]	DEBUG=1	"
+	@echo "			enables the debug flags for compilation"
+	@echo "Default settings are"
+	@echo "[DEBUG:$(DEBUG)]\n[OPENMP:$(OPENMP)]\n[TOOLCHAIN:$(TOOLCHAIN)]\n[CPPFLAGS:$(CPPFLAGS)]\n[CXXFLAGS:$(CXXFLAGS)]\n[LDFLAGS:$(LDFLAGS)]"
+
+
 .PHONY: echo
 echo:
 	@echo "[DEBUG:$(DEBUG)]\n[OPENMP:$(OPENMP)]\n[CXX:$(CXX)]\n[CPPFLAGS:$(CPPFLAGS)]\n[CXXFLAGS:$(CXXFLAGS)]\n[LDFLAGS:$(LDFLAGS)]"
