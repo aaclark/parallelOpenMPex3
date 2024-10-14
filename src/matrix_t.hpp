@@ -80,7 +80,7 @@ public:
 
 //        int row, i, j; //private(row,i,j)
         {
-#pragma omp parallel for default(none) shared(other, c) schedule(static) collapse(COLLAPSE_LEVEL)
+#pragma omp parallel for default(none) shared(other, c) collapse(COLLAPSE_LEVEL)
                 for (int row = 0; row < N; row++) { // row
                     for (int i = 0; i < N; i++) {
                         c(row, i) = 0;
