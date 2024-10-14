@@ -69,8 +69,6 @@ int main(int argc, char* argv[]) {
     a.collapse_level=1;
     b.collapse_level=1;
     c = (a*b);
-
-    // Stop the clock!
     auto t2 = high_resolution_clock::now();
     a.collapse_level=2;
     b.collapse_level=2;
