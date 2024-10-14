@@ -17,7 +17,7 @@ START=1020
 END=2000
 # Run the benchmarks
 for threads in "${thread_counts[@]}"; do
-  for ((N=START;N<=END;N+=20)); do
+  for ((N=START;N<=END;N+=100)); do
     # Set the number of threads for OpenMP
     export OMP_NUM_THREADS=$threads
 
