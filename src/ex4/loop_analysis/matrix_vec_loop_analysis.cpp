@@ -1,7 +1,7 @@
 #include "../matrix_vec_solve.hpp"
 
 template <typename T>
-bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
+bool solve_c_loop_tracked(matrix<T>& A, vec<T>& x, vec<T>& b) {
     int A_M = A.size(); // A_M = width(M)
     int b_N = b.size(); // b_N = |b|
     if (b_N != A_M)
@@ -27,7 +27,6 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
         */
         auto _norm_fn_idx = [](int begin, int stride, int end){return [begin,stride](int idx){return idx * stride + begin;};};
         auto _norm_N = [](int begin, int stride, int end)->int{return (end - begin + stride) / stride - 1;};
-        //auto INDEX_NORM = [](int l, int s, int i){return i*s+l;};
 
 //#pragma omp for schedule(static)
         // Non-loop-carried
@@ -90,7 +89,7 @@ bool solve_c(matrix<T>& A, vec<T>& x, vec<T>& b) {
 
 
 template <typename T>
-bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
+bool solve_r_loop_tracked(matrix<T>& A,vec<T>& x, vec<T>& b) {
     int A_M = A.size(); // A_M = width(M)
     int b_N = b.size(); // b_N = |b|
     if (b_N != A_M)
@@ -122,7 +121,7 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
         // for (L1 : 0 .. L1N)
 
         for (L1 = 0; L1 < L1N; L1++) {
-            row = j(L1);
+            // row = j(L1);
             T val_b_L1 = b(j(L1)); // READ
             x(j(L1)) = val_b_L1; // WRITE
 
@@ -132,7 +131,7 @@ bool solve_r(matrix<T>& A,vec<T>& x, vec<T>& b) {
             int L2N = _norm_N(j(L1)+1, 1, A_M);
 
             for (L2 = 0; L2 < L2N; L2++) {
-                col = i(L2);
+                // col = i(L2);
                 x(j(L1)) -= A(j(L1), i(L2)) * x(i(L2));
             }
             x(j(L1)) /= A(j(L1), j(L1));
