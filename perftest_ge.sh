@@ -10,14 +10,14 @@ output_file="benchmark_results_ge.txt"
 thread_counts=(1 2 4 8 16)
 
 # Clear the output file before starting the benchmarks
-#echo "" > $output_file
+echo "" > $output_file
 
 typeset -i N START END
-START=100
+START=12000
 END=42000
 # Run the benchmarks
 for threads in "${thread_counts[@]}"; do
-  for ((N=START;N<=END;N+=100)); do
+  for ((N=START;N<=END;N+=10000)); do
     # Set the number of threads for OpenMP
     export OMP_NUM_THREADS=$threads
     echo "T=${OMP_NUM_THREADS}, N=${N}"
