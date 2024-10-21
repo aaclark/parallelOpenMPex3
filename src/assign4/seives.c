@@ -161,10 +161,13 @@ int main (int argc, char ** argv) {
       } else {
 	worker_to = worker_from + chunk_size - 1;
       }
-      printf("worker send %d %d \n", worker_from, worker_to);
+      printf("Sending chunk to worker from %d to %d \n", worker_from, worker_to);
       MPI_Send(&worker_from, 1, MPI_INT, i, TAG_RANGE, MPI_COMM_WORLD);
+      printf("Sending from %d to %d \n", worker_from, worker_to);
       MPI_Send(&worker_to, 1, MPI_INT, i, TAG_RANGE, MPI_COMM_WORLD);
-      MPI_Send(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD);      
+      printf("Sending number of primes %d \n", nr_of_prime_numbers_sequential);
+      MPI_Send(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD);
+      printf("Sending the primes %d to %d \n", worker_from, worker_to);
       MPI_Send(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD);
       worker_from += chunk_size;
     }
@@ -172,12 +175,16 @@ int main (int argc, char ** argv) {
 
   //Let's update worker_from worker_to, prime_numbers_seqeuntial so each process can work on their range and mark the numbers that are not primes
   MPI_Recv(&worker_from, 1, MPI_INT, 0, TAG_RANGE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  printf("REC1");
   MPI_Recv(&worker_to, 1, MPI_INT, 0, TAG_RANGE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  printf("REC2");
   MPI_Recv(&nr_of_prime_numbers_sequential, 1, MPI_INT, 0, TAG_PRIMES, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  printf("REC3");
   prime_numbers_sequential = (int*)malloc(nr_of_prime_numbers_sequential * sizeof(int));
   MPI_Recv(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, 0, TAG_PRIMES, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+  printf("REC4");
 
-  printf("worker %d recieved %d %d primes %d\n", rank, worker_from, worker_to, nr_of_prime_numbers_sequential);
+  printf("Worker %d has recieved from %d to %d primes_seq %d\n", rank, worker_from, worker_to, nr_of_prime_numbers_sequential);
   
   
   // Create a boolean subarray for the worker to mark the numbers that are not primes and send back the result to process 0
@@ -198,8 +205,10 @@ int main (int argc, char ** argv) {
   }
 
   printf("Worker .. %d will start sending chunk %d\n", rank, chunk_length);
-  
-  MPI_Send(marked_natural_numbers_worker_chunk, chunk_length, MPI_C_BOOL, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD);
+  MPI_Request request;
+  //MPI_Send(marked_natural_numbers_worker_chunk, chunk_length, MPI_C_BOOL, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD);
+  MPI_Isend(marked_natural_numbers_worker_chunk, chunk_length, MPI_C_BOOL, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &request);
+  // Ensure that the send completes
   
   printf("Worker finished sending");
   
@@ -241,7 +250,6 @@ int main (int argc, char ** argv) {
       int primes_post = count_primes(marked_natural_numbers,max);
     }
     
-    free(marked_natural_numbers_worker_chunk);
     printf("MARKING DONE\n");
     fflush(stdout);
     gettimeofday(&end, NULL);
@@ -293,6 +301,11 @@ int main (int argc, char ** argv) {
     free(marked_natural_numbers);
     free(prime_numbers_sequential);
   }
+  // Since we used non blocking send add a barrier to ensure that main thread has received
+  // marked_natural_numbers_worker_chunk from all processes before we free it 
+  MPI_Barrier(MPI_COMM_WORLD);
+  free(marked_natural_numbers_worker_chunk);
+  
   MPI_Finalize();
   return 0;
 }
