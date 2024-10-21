@@ -297,7 +297,7 @@ int main (int argc, char ** argv) {
     
     free(marked_natural_numbers);
     free(prime_numbers_sequential);
-    MPI_Finalize();
-    return 0;
   }
+  MPI_Finalize();
+  return 0;
 }
