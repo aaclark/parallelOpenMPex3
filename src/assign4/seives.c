@@ -190,14 +190,11 @@ int main (int argc, char ** argv) {
   for (int natural_number = worker_from; natural_number <= worker_to; natural_number++) {
     for (int i = 0; i < nr_of_prime_numbers_sequential; i++) {
       int prime_number = prime_numbers_sequential[i];
-      printf("worker %d comparing prime %d nat %d\n", rank, prime_number, natural_number);
       if (natural_number % prime_number == 0) {
-	printf("worker %d marking non prime %d \n", rank, natural_number);
 	marked_natural_numbers_worker_chunk[natural_number-worker_from] = true;
 	break;
       }
     }
-    printf("PRIME %d \n",natural_number);
   }
 
   printf("Worker .. %d will start sending chunk %d\n", rank, chunk_length);
@@ -210,7 +207,7 @@ int main (int argc, char ** argv) {
     int primes_pre = count_primes(marked_natural_numbers,max);
     printf("Primes  PRE %d\n", primes_pre);
     for (int i = 0; i < size; i++) {
-      printf("GATHER the chunks from worker %d\n", i);
+      //printf("GATHER the chunks from worker %d\n", i);
       fflush(stdout);
       // Status object to track the sender
       MPI_Status status;
@@ -229,21 +226,19 @@ int main (int argc, char ** argv) {
 	chunk_size_receive=worker_ranges_from[sender+1] - worker_range_from;
       }
       printf("START RECEIVE %d %d chunk size \n", sender, chunk_size_receive);
-      bool* test_rec = (bool*)malloc(chunk_size_receive * sizeof(bool));
-      MPI_Recv(test_rec, chunk_size_receive, MPI_C_BOOL, sender, TAG_CHUNK_RESULT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      bool* marked_natural_numbers_chunk = (bool*)malloc(chunk_size_receive * sizeof(bool));
+      MPI_Recv(marked_natural_numbers_chunk, chunk_size_receive, MPI_C_BOOL, sender, TAG_CHUNK_RESULT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
       printf("END RECEIVE %d %d chunk size\n", sender, chunk_size_receive);
       fflush(stdout);
       
       for(int i=0;i<chunk_size_receive;i++) {
-	if (test_rec[i]){
+	if (marked_natural_numbers_chunk[i]){
 	  int marked_natural_number = i + worker_range_from;
 	  marked_natural_numbers[marked_natural_number-1] = true;
-	  printf("marked naturel %d at index %d \n", marked_natural_number, marked_natural_number-1);
 	}
       }
-      free(test_rec);
+      free(marked_natural_numbers_chunk);
       int primes_post = count_primes(marked_natural_numbers,max);
-      printf("Primes  PRE %d\n", primes_post);
     }
     
     free(marked_natural_numbers_worker_chunk);
