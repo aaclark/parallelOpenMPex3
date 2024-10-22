@@ -20,9 +20,11 @@
 #include <sys/time.h>
 
 typedef enum {
-    TAG_RANGE,
-    TAG_PRIMES,
-    TAG_CHUNK_RESULT
+  TAG_WORKER_FROM,
+  TAG_WORKER_TO,    
+  TAG_PRIME_COUNT,
+  TAG_PRIMES,
+  TAG_CHUNK_RESULT
 } MpiTags;
 
 // Arguments for a thread so it now what chunk of the natural_numbers to work on and mark as prime.
@@ -107,8 +109,7 @@ int main (int argc, char ** argv) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
-  int tag=0;
-  // int nthreads = 8;
+  
   int max = 110;
   if (argc > 1){
     max = atoi(argv[1]);
@@ -151,9 +152,9 @@ int main (int argc, char ** argv) {
     
     int total_range = max - sequential_max;
     int chunk_size = floor((total_range)/size);
-    worker_from = sequential_max + 1;    
+    worker_from = sequential_max + 1;
     gettimeofday(&starting_threads, NULL);
-    
+    MPI_Request request;
     for (int i = 0; i < size; i++) {
       worker_ranges_from[i] = worker_from;
       if (i==size-1) {
@@ -161,31 +162,22 @@ int main (int argc, char ** argv) {
       } else {
 	worker_to = worker_from + chunk_size - 1;
       }
-      printf("Sending chunk to worker from %d to %d \n", worker_from, worker_to);
-      MPI_Send(&worker_from, 1, MPI_INT, i, TAG_RANGE, MPI_COMM_WORLD);
-      printf("Sending from %d to %d \n", worker_from, worker_to);
-      MPI_Send(&worker_to, 1, MPI_INT, i, TAG_RANGE, MPI_COMM_WORLD);
-      printf("Sending number of primes %d \n", nr_of_prime_numbers_sequential);
-      MPI_Send(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD);
-      printf("Sending the primes %d to %d \n", worker_from, worker_to);
-      MPI_Send(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD);
+
+      MPI_Isend(&worker_from, 1, MPI_INT, i, TAG_WORKER_FROM, MPI_COMM_WORLD, &request);
+      MPI_Isend(&worker_to, 1, MPI_INT, i, TAG_WORKER_TO, MPI_COMM_WORLD, &request);
+      MPI_Isend(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIME_COUNT, MPI_COMM_WORLD, &request);
+      MPI_Isend(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD, &request);
       worker_from += chunk_size;
     }
   }
 
   //Let's update worker_from worker_to, prime_numbers_seqeuntial so each process can work on their range and mark the numbers that are not primes
-  MPI_Recv(&worker_from, 1, MPI_INT, 0, TAG_RANGE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  printf("REC1");
-  MPI_Recv(&worker_to, 1, MPI_INT, 0, TAG_RANGE, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  printf("REC2");
-  MPI_Recv(&nr_of_prime_numbers_sequential, 1, MPI_INT, 0, TAG_PRIMES, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  printf("REC3");
+  MPI_Recv(&worker_from, 1, MPI_INT, 0, TAG_WORKER_FROM, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  MPI_Recv(&worker_to, 1, MPI_INT, 0, TAG_WORKER_TO, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  MPI_Recv(&nr_of_prime_numbers_sequential, 1, MPI_INT, 0, TAG_PRIME_COUNT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   prime_numbers_sequential = (int*)malloc(nr_of_prime_numbers_sequential * sizeof(int));
   MPI_Recv(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, 0, TAG_PRIMES, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-  printf("REC4");
-
   printf("Worker %d has recieved from %d to %d primes_seq %d\n", rank, worker_from, worker_to, nr_of_prime_numbers_sequential);
-  
   
   // Create a boolean subarray for the worker to mark the numbers that are not primes and send back the result to process 0
   // Process 0 can then match and update the sub array with the correct indexes at marked_natural_numbers
@@ -210,23 +202,15 @@ int main (int argc, char ** argv) {
   MPI_Isend(marked_natural_numbers_worker_chunk, chunk_length, MPI_C_BOOL, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &request);
   // Ensure that the send completes
   
-  printf("Worker finished sending");
-  
   if (!rank) {
     int primes_pre = count_primes(marked_natural_numbers,max);
-    printf("Primes  PRE %d\n", primes_pre);
     for (int i = 0; i < size; i++) {
-      //printf("GATHER the chunks from worker %d\n", i);
-      fflush(stdout);
-      // Status object to track the sender
       MPI_Status status;
       
       // Receive the message and get status
       MPI_Probe(MPI_ANY_SOURCE, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &status);
       // Get the actual sender (worker rank)
       int sender = status.MPI_SOURCE;
-      printf("SENDER %d i %d\n", sender, i);
-      fflush(stdout);
       int chunk_size_receive;
       int worker_range_from = worker_ranges_from[sender];
       if (sender==size-1) {
@@ -234,12 +218,10 @@ int main (int argc, char ** argv) {
       } else {
 	chunk_size_receive=worker_ranges_from[sender+1] - worker_range_from;
       }
-      printf("START RECEIVE %d %d chunk size \n", sender, chunk_size_receive);
+      
       bool* marked_natural_numbers_chunk = (bool*)malloc(chunk_size_receive * sizeof(bool));
       MPI_Recv(marked_natural_numbers_chunk, chunk_size_receive, MPI_C_BOOL, sender, TAG_CHUNK_RESULT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-      printf("END RECEIVE %d %d chunk size\n", sender, chunk_size_receive);
-      fflush(stdout);
-      
+            
       for(int i=0;i<chunk_size_receive;i++) {
 	if (marked_natural_numbers_chunk[i]){
 	  int marked_natural_number = i + worker_range_from;
@@ -250,7 +232,6 @@ int main (int argc, char ** argv) {
       int primes_post = count_primes(marked_natural_numbers,max);
     }
     
-    printf("MARKING DONE\n");
     fflush(stdout);
     gettimeofday(&end, NULL);
     
@@ -270,7 +251,7 @@ int main (int argc, char ** argv) {
       printf("Error opening file for statistics!\n");
       return 1;
     }
-    printf("OPENED FILES\n");
+
     fflush(stdout);
     double sequential_time_spent = ((double)(starting_threads.tv_usec - start.tv_usec) / 1000000.0) + starting_threads.tv_sec - start.tv_sec;
     double total_time_spent = ((double)(end.tv_usec - start.tv_usec) / 1000000.0) + end.tv_sec - start.tv_sec;
