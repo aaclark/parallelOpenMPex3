@@ -19,6 +19,8 @@
 #include <math.h>
 #include <sys/time.h>
 
+#define MAX_NAME_SIZE 42
+
 typedef enum {
   TAG_WORKER_FROM,
   TAG_WORKER_TO,
@@ -73,6 +75,7 @@ int count_primes(bool marked_natural_numbers[], int natural_number_max) {
 }
 
 int main (int argc, char ** argv) {
+  char name[MAX_NAME_SIZE];
   MPI_Init(&argc, &argv);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -164,8 +167,10 @@ int main (int argc, char ** argv) {
       }
     }
   }
-
-  printf("Process %d is starting to send it's computed result \n", rank);
+  int len;
+  MPI_Get_processor_name(name, &len);
+  
+  printf("Process %d running at host %s is starting to send it's computed result \n", rank, name);
   MPI_Request request;
   MPI_Isend(marked_natural_numbers_worker_chunk, chunk_length, MPI_C_BOOL, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &request);
     
