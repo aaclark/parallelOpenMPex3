@@ -21,20 +21,11 @@
 
 typedef enum {
   TAG_WORKER_FROM,
-  TAG_WORKER_TO,    
+  TAG_WORKER_TO,
   TAG_PRIME_COUNT,
   TAG_PRIMES,
   TAG_CHUNK_RESULT
 } MpiTags;
-
-// Arguments for a thread so it now what chunk of the natural_numbers to work on and mark as prime.
-typedef struct {
-  int from;
-  int to;
-  bool* marked_natural_numbers;
-  int* prime_numbers_sequential;
-  int nr_of_prime_numbers_sequential;
-} thread_args_t;
 
 /* First a sequential solution for finding primes
    Mark all multiples of k between k*k and Max in the marked_natural_numbers boolean array.*/
@@ -68,28 +59,6 @@ void mark_all_numbers_not_prime_sequential(bool marked_natural_numbers[], int k,
     mark_all_multiples_of_k_sequential(marked_natural_numbers, k, max);
     k = find_next_smallest_unmarked_number_sequential(marked_natural_numbers, k+1, max);
   }  while (k*k <=max);
-}
-
-/*
-  
-*/
-
-void *mark_natural_numbers_by_thread(void *arg_parameter) {
-  thread_args_t *args = (thread_args_t *) arg_parameter;
-  printf("Thread from %d to %d starting to work\n", args->from, args->to);
-    
-  for (int natural_number = args->from; natural_number <= args->to; natural_number++) {
-    for (int i = 0; i < args->nr_of_prime_numbers_sequential; i++) {
-      int prime_number = args->prime_numbers_sequential[i];
-      if (natural_number % prime_number == 0) {
-	args->marked_natural_numbers[natural_number - 1] = true;
-	break;
-      }
-    }
-  }
-  int index = args->from;
-  
-  return NULL;
 }
 
 // Count how many primes there are (natural numbers that are not marked) in the range 1 .. max 
@@ -177,7 +146,7 @@ int main (int argc, char ** argv) {
   MPI_Recv(&nr_of_prime_numbers_sequential, 1, MPI_INT, 0, TAG_PRIME_COUNT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   prime_numbers_sequential = (int*)malloc(nr_of_prime_numbers_sequential * sizeof(int));
   MPI_Recv(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, 0, TAG_PRIMES, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-  printf("Worker %d has recieved from %d to %d primes_seq %d\n", rank, worker_from, worker_to, nr_of_prime_numbers_sequential);
+  printf("Process %d will work on chunk from %d to %d\n", rank, worker_from, worker_to);
   
   // Create a boolean subarray for the worker to mark the numbers that are not primes and send back the result to process 0
   // Process 0 can then match and update the sub array with the correct indexes at marked_natural_numbers
@@ -196,20 +165,15 @@ int main (int argc, char ** argv) {
     }
   }
 
-  printf("Worker .. %d will start sending chunk %d\n", rank, chunk_length);
+  printf("Process %d is starting to send it's computed result \n", rank);
   MPI_Request request;
-  //MPI_Send(marked_natural_numbers_worker_chunk, chunk_length, MPI_C_BOOL, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD);
   MPI_Isend(marked_natural_numbers_worker_chunk, chunk_length, MPI_C_BOOL, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &request);
-  // Ensure that the send completes
-  
+    
   if (!rank) {
     int primes_pre = count_primes(marked_natural_numbers,max);
     for (int i = 0; i < size; i++) {
       MPI_Status status;
-      
-      // Receive the message and get status
-      MPI_Probe(MPI_ANY_SOURCE, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &status);
-      // Get the actual sender (worker rank)
+      MPI_Probe(MPI_ANY_SOURCE, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &status);      
       int sender = status.MPI_SOURCE;
       int chunk_size_receive;
       int worker_range_from = worker_ranges_from[sender];
@@ -281,6 +245,7 @@ int main (int argc, char ** argv) {
     
     free(marked_natural_numbers);
     free(prime_numbers_sequential);
+    printf("Number of primes found %d, more details can be read in report.txt \n", number_of_primes);    
   }
   // Since we used non blocking send add a barrier to ensure that main thread has received
   // marked_natural_numbers_worker_chunk from all processes before we free it 
