@@ -88,13 +88,13 @@ int main (int argc, char ** argv) {
   }
   
   struct timeval start, starting_threads, end;
-  gettimeofday(&start, NULL);
   bool* marked_natural_numbers = NULL;
   int* prime_numbers_sequential = NULL;
   int worker_from, worker_to, nr_of_prime_numbers_sequential, sequential_max;
   int* worker_ranges_from = (int*)malloc(size * sizeof(int));
 
   if (!rank) {
+    gettimeofday(&start, NULL);
     // A boolean array where you can check if a natural number n (<=max) is 'marked' by inspecting marked_natural_numbers[n-1]
     // We want to mark all numbers that is not a prime
     marked_natural_numbers = (bool*)malloc(max * sizeof(bool));
