@@ -92,7 +92,7 @@ int main (int argc, char ** argv) {
   int* prime_numbers_sequential = NULL;
   int worker_from, worker_to, nr_of_prime_numbers_sequential, sequential_max;
   int* worker_ranges_from = (int*)malloc(size * sizeof(int));
-  printf("STARTING");
+
   if (!rank) {
     gettimeofday(&start, NULL);
     // A boolean array where you can check if a natural number n (<=max) is 'marked' by inspecting marked_natural_numbers[n-1]
@@ -135,11 +135,18 @@ int main (int argc, char ** argv) {
 	worker_to = worker_from + chunk_size - 1;
       }
 
-      MPI_Isend(&worker_from, 1, MPI_INT, i, TAG_WORKER_FROM, MPI_COMM_WORLD, &request);
-      MPI_Isend(&worker_to, 1, MPI_INT, i, TAG_WORKER_TO, MPI_COMM_WORLD, &request);
-      MPI_Isend(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIME_COUNT, MPI_COMM_WORLD, &request);
-      MPI_Isend(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD, &request);
-      printf("Sending from %d to %d worker %d", worker_from, worker_to, i);
+      //Send the message to itself non blocking to avoid deadlock
+      if (i==rank){
+	MPI_Isend(&worker_from, 1, MPI_INT, i, TAG_WORKER_FROM, MPI_COMM_WORLD, &request);
+	MPI_Isend(&worker_to, 1, MPI_INT, i, TAG_WORKER_TO, MPI_COMM_WORLD, &request);
+	MPI_Isend(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIME_COUNT, MPI_COMM_WORLD, &request);
+	MPI_Isend(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD, &request);
+      } else {
+	MPI_Send(&worker_from, 1, MPI_INT, i, TAG_WORKER_FROM, MPI_COMM_WORLD);
+	MPI_Send(&worker_to, 1, MPI_INT, i, TAG_WORKER_TO, MPI_COMM_WORLD);
+	MPI_Send(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIME_COUNT, MPI_COMM_WORLD);
+	MPI_Send(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD);
+      }      
       worker_from += chunk_size;
     }
   }
