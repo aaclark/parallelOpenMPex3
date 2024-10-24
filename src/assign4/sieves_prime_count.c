@@ -1,7 +1,7 @@
-/* File:     seives.c
+/* File:     sieves_prime_count.c
  * Purpose:  Find all the primes for the natural number in the range 1..Max
  *
- * Compile:  gcc seives.c -o seives -lpthread  -lm
+ * Compile:  mpicc sieves_prime_count -o seives_prime_count -lpthread  -lm
  * Run:      ./seives <the highest ><max> <number of threads> <n>
  *           n is the number of terms of the series to use.
  *           n should be evenly divisible by the number of threads
@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <sys/time.h>
+#include <time.h>
 
 #define MAX_NAME_SIZE 42
 
@@ -106,6 +107,9 @@ int main (int argc, char ** argv) {
   if (argc > 1){
     max = atoi(argv[1]);
   }
+  // Get the current time
+  time_t raw_time;
+  struct tm *time_info;
   
   struct timeval start, starting_threads, end, gather_start, gather_end;
   bool* marked_natural_numbers = NULL;
@@ -179,23 +183,64 @@ int main (int argc, char ** argv) {
   prime_numbers_sequential = (int*)malloc(nr_of_prime_numbers_sequential * sizeof(int));
   MPI_Recv(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, 0, TAG_PRIMES, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
   printf("Process %d will work on chunk from %d to %d\n", rank, worker_from, worker_to);
+  time(&raw_time);                 // Get the current time
+  time_info = localtime(&raw_time); // Convert to local time
+  
+  // Print time in hour:min:sec format
+  printf("Rank, %d Current time: %02d:%02d:%02d\n",
+	 rank,
+	 time_info->tm_hour, 
+	 time_info->tm_min, 
+	 time_info->tm_sec);
   
   int chunk_prime_count = find_nr_of_primes(prime_numbers_sequential, nr_of_prime_numbers_sequential, worker_from, worker_to);
   int len;
   MPI_Get_processor_name(name, &len);
   
   printf("Process %d running at host %s is starting to send it's computed result \n", rank, name);
+
+  time(&raw_time);                 // Get the current time
+  time_info = localtime(&raw_time); // Convert to local time
+  
+  // Print time in hour:min:sec format
+  printf("Rank, start sending: %d Current time: %02d:%02d:%02d\n",
+	 rank,
+	 time_info->tm_hour, 
+	 time_info->tm_min, 
+	 time_info->tm_sec);
   MPI_Request request;
   MPI_Isend(&chunk_prime_count, 1, MPI_INT, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &request);
   
   if (!rank) {
+      time(&raw_time);                 // Get the current time
+      time_info = localtime(&raw_time); // Convert to local time
+  
+      // Print time in hour:min:sec format
+      printf("Start receive: %d Current time: %02d:%02d:%02d\n",
+	     rank,
+	     time_info->tm_hour, 
+	     time_info->tm_min,
+	     time_info->tm_sec);
+
     int primes_pre = count_primes(marked_natural_numbers,max);
     for (int i = 0; i < size; i++) {
       MPI_Status status;
       MPI_Probe(MPI_ANY_SOURCE, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &status);      
       int sender = status.MPI_SOURCE;
       int nr_of_primes_found_by_process;
+
       MPI_Recv(&nr_of_primes_found_by_process, 1, MPI_INT, sender, TAG_CHUNK_RESULT, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            time(&raw_time);                 // Get the current time
+      time_info = localtime(&raw_time); // Convert to local time
+  
+      // Print time in hour:min:sec format
+      printf("Receive done from: %d Current time: %02d:%02d:%02d\n",
+	     sender,
+	     time_info->tm_hour, 
+	     time_info->tm_min,
+	     time_info->tm_sec);
+
+      
       total_prime_count += nr_of_primes_found_by_process;
     }
     
