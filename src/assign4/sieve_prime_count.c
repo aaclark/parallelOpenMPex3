@@ -131,7 +131,7 @@ int main (int argc, char ** argv) {
 
     nr_of_prime_numbers_sequential = count_primes(marked_natural_numbers, sequential_max);
     total_prime_count = nr_of_prime_numbers_sequential;
-    printf("Number of primes found from the sequential part is %d %d\n", nr_of_prime_numbers_sequential, sequential_max);
+    printf("Number of primes found from the sequential part is %d\n", nr_of_prime_numbers_sequential);
     prime_numbers_sequential = (int*)malloc(nr_of_prime_numbers_sequential * sizeof(int));
     
     int prime_index = 0;
