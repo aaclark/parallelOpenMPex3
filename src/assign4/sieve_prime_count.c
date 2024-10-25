@@ -179,7 +179,7 @@ int main (int argc, char ** argv) {
   prime_numbers_sequential = (int*)malloc(nr_of_prime_numbers_sequential * sizeof(int));
   MPI_Recv(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, 0, TAG_PRIMES, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
   printf("Process %d will work on chunk from %d to %d\n", rank, worker_from, worker_to);
-  
+  MPI_Barrier(MPI_COMM_WORLD);
   int chunk_prime_count = find_nr_of_primes(prime_numbers_sequential, nr_of_prime_numbers_sequential, worker_from, worker_to);
   int len;
   MPI_Get_processor_name(name, &len);
