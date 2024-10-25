@@ -119,15 +119,14 @@ int main (int argc, char ** argv) {
     // A boolean array where you can check if a natural number n (<=max) is 'marked' by inspecting marked_natural_numbers[n-1]
     sequential_max = ceil(sqrt(max)); // Round upward to ensure sequential_max*sequential_max <= max
     // We want to mark all numbers that is not a prime
-    marked_natural_numbers = (bool*)malloc(max * sizeof(bool));
-    for (int i = 0; i < max; i++) {
+    marked_natural_numbers = (bool*)malloc(sequential_max * sizeof(bool));
+    for (int i = 0; i < sequential_max; i++) {
       marked_natural_numbers[i] = false;
     }
     
     marked_natural_numbers[0] = true; // manually mark the first natural number 1
     int k = 2;
-    
-    
+        
     mark_all_numbers_not_prime_sequential(marked_natural_numbers, k, sequential_max);
 
     nr_of_prime_numbers_sequential = count_primes(marked_natural_numbers, sequential_max);
@@ -184,13 +183,11 @@ int main (int argc, char ** argv) {
   int chunk_prime_count = find_nr_of_primes(prime_numbers_sequential, nr_of_prime_numbers_sequential, worker_from, worker_to);
   int len;
   MPI_Get_processor_name(name, &len);
-  
   printf("Process %d running at host %s is starting to send it's computed result \n", rank, name);
   MPI_Request request;
   MPI_Isend(&chunk_prime_count, 1, MPI_INT, 0, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &request);
   
   if (!rank) {
-    int primes_pre = count_primes(marked_natural_numbers,max);
     for (int i = 0; i < size; i++) {
       MPI_Status status;
       MPI_Probe(MPI_ANY_SOURCE, TAG_CHUNK_RESULT, MPI_COMM_WORLD, &status);      
