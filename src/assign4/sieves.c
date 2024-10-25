@@ -1,10 +1,10 @@
-/* File:     seives.c
+/* File:     sieves.c
  * Purpose:  Find all the primes for the natural number in the range 1..Max
  *
- * Compile:  gcc seives.c -o seives -lpthread  -lm
- * Run:      ./seives <the highest ><max> <number of threads> <n>
- *           n is the number of terms of the series to use.
- *           n should be evenly divisible by the number of threads
+ * Compile:  mpicc sieves.c -o sieves -lm
+ * Run:      mpiexec -np <n> ./seives <max>
+ *           n is the number of processes
+ *           We will find the primes in the range 1 to Max 
  * Output:   Stores the result in three files
  *           report.txt will report how many for primes was found and the execution times for this run
  *           primes.txt will contain all the primes from this run
@@ -107,7 +107,7 @@ int main (int argc, char ** argv) {
     sequential_max = ceil(sqrt(max)); // Round upward to ensure sequential_max*sequential_max <= max
     
     mark_all_numbers_not_prime_sequential(marked_natural_numbers, k, sequential_max);
-
+    
     nr_of_prime_numbers_sequential = count_primes(marked_natural_numbers, sequential_max);
     
     printf("Number of primes found from the sequential part is %d \n", nr_of_prime_numbers_sequential);
@@ -146,7 +146,7 @@ int main (int argc, char ** argv) {
 	MPI_Send(&worker_to, 1, MPI_INT, i, TAG_WORKER_TO, MPI_COMM_WORLD);
 	MPI_Send(&nr_of_prime_numbers_sequential, 1, MPI_INT, i, TAG_PRIME_COUNT, MPI_COMM_WORLD);
 	MPI_Send(prime_numbers_sequential, nr_of_prime_numbers_sequential, MPI_INT, i, TAG_PRIMES, MPI_COMM_WORLD);
-      }      
+      }
       worker_from += chunk_size;
     }
   }
