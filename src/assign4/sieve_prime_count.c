@@ -117,6 +117,7 @@ int main (int argc, char ** argv) {
   if (!rank) {
     gettimeofday(&start, NULL);
     // A boolean array where you can check if a natural number n (<=max) is 'marked' by inspecting marked_natural_numbers[n-1]
+    sequential_max = ceil(sqrt(max)); // Round upward to ensure sequential_max*sequential_max <= max
     // We want to mark all numbers that is not a prime
     marked_natural_numbers = (bool*)malloc(max * sizeof(bool));
     for (int i = 0; i < max; i++) {
@@ -125,7 +126,7 @@ int main (int argc, char ** argv) {
     
     marked_natural_numbers[0] = true; // manually mark the first natural number 1
     int k = 2;
-    sequential_max = ceil(sqrt(max)); // Round upward to ensure sequential_max*sequential_max <= max
+    
     
     mark_all_numbers_not_prime_sequential(marked_natural_numbers, k, sequential_max);
 
@@ -217,15 +218,15 @@ int main (int argc, char ** argv) {
     fflush(stdout);
     double sequential_time_spent = ((double)(starting_threads.tv_usec - start.tv_usec) / 1000000.0) + starting_threads.tv_sec - start.tv_sec;
     double total_time_spent = ((double)(end.tv_usec - start.tv_usec) / 1000000.0) + end.tv_sec - start.tv_sec;
-    fprintf(file_report, "The program is using %d threads to find all the primes for the natural numbers in the range 1 to %d \n", size, max);
+    fprintf(file_report, "The program is using %d processes to find all the primes for the natural numbers in the range 1 to %d \n", size, max);
     fprintf(file_report, "Calculating all the primes took %f seconds:\n", total_time_spent);
     fprintf(file_report, "The sequential part calculated primes in the range 1 to %d and took %f seconds:\n", sequential_max, sequential_time_spent);
     
     fprintf(file_report, "Number of primes found %d\n", total_prime_count);
     fclose(file_report);
-    fprintf(file_statistics, "\nUsing %d threads to find all the primes for the natural numbers in the range 1 to %d took %f seconds:\n", size, max, total_time_spent);
+    fprintf(file_statistics, "\nUsing %d processes to find all the primes for the natural numbers in the range 1 to %d took %f seconds:\n", size, max, total_time_spent);
     fprintf(file_statistics, "The sequential part took %f seconds:\n", sequential_time_spent);
-    fprintf(file_statistics, "The threaded part took %f seconds:\n", total_time_spent - sequential_time_spent);
+    fprintf(file_statistics, "The parallel part took %f seconds:\n", total_time_spent - sequential_time_spent);
     fclose(file_statistics);
     
     free(marked_natural_numbers);
