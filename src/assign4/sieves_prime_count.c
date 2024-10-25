@@ -1,10 +1,10 @@
 /* File:     seives.c
  * Purpose:  Find all the primes for the natural number in the range 1..Max
  *
- * Compile:  gcc seives.c -o seives -lpthread  -lm
- * Run:      ./seives <the highest ><max> <number of threads> <n>
- *           n is the number of terms of the series to use.
- *           n should be evenly divisible by the number of threads
+ * Compile:  mpicc sieves_prime_count.c -o sieves_prime_count -lm
+ * Run:      mpiexec -np <n> ./seives <max>
+ *           n is the number of processes
+ *           We will find the primes in the range 1 to Max 
  * Output:   Stores the result in three files
  *           report.txt will report how many for primes was found and the execution times for this run
  *           primes.txt will contain all the primes from this run
